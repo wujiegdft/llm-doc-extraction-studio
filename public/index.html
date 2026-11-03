@@ -16,11 +16,7 @@
     <a class="skip" href="#main">跳到正文</a>
     <header class="topbar">
       <a class="brand" href="#main"
-        ><span class="brand-icon" aria-hidden="true">▤</span> 文档抽取<span
-          class="brand-sub"
-        >
-          / 讲解工作台</span
-        ></a
+        >文档抽取<span class="brand-sub"> / 讲解工作台</span></a
       >
       <nav aria-label="章节导航">
         <a href="#background">背景</a><a href="#pipeline">链路</a
@@ -35,45 +31,41 @@
     <main id="main">
       <div class="hero">
         <div>
-          <p class="eyebrow">CONFIGURATION → PROMPT → STRUCTURED DATA</p>
-          <h1>
-            让业务知识，<br />直接成为抽取配置<span class="accent">。</span>
-          </h1>
+          <p class="eyebrow">配置驱动的文档抽取</p>
+          <h1>由业务同事配置字段，系统拼装提示词并完成抽取</h1>
           <p class="lead">
-            从「开发写解析规则」到「业务定义字段」。<br />大模型只负责抽取，工程负责把整条链路连接起来。
+            以前的数据解析需求要排期开发、按规则写代码；现在由懂业务的人在界面上选字段、用自然语言写含义和大概怎么取，系统据此拼装提示词，逐层解析后入库。
           </p>
-          <a class="primary" href="#playground"
-            >打开提示词拼装演示 <span aria-hidden="true">↗</span></a
-          >
+          <a class="primary" href="#playground">查看提示词拼装演示</a>
         </div>
         <aside class="hero-note">
-          <span class="small-label">核心分工 / THE IDEA</span>
+          <span class="small-label">分工</span>
           <div class="equation">
-            <span>业务知识</span><b>＋</b><span>工程约束</span><b>↓</b
-            ><strong>可配置的抽取任务</strong>
+            <span>业务方：描述字段是什么、怎么找</span>
+            <span>工程方：拼装提示词、编排流程、转换与入库</span>
           </div>
-          <p>
-            业务方描述「是什么、怎么找」<br />系统负责「怎么组装、怎么落库」
-          </p>
+          <p>流程由代码编排；大模型只负责判断与抽取。</p>
         </aside>
         <p class="disclaimer">
-          <span class="status-dot"></span> 全站脱敏、模拟数据 · 不调用模型 ·
-          不执行真实入库 · 无真实公司信息
+          全站为脱敏、模拟数据；不调用模型，不执行真实入库，不含真实公司信息。
         </p>
       </div>
 
       <section id="background" aria-labelledby="background-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">01 / BACKGROUND</p>
-            <h2 id="background-title">改变的不是解析入口，是协作方式</h2>
+            <p class="eyebrow">
+              <span class="chapter-no">01</span
+              ><span class="chapter-name">BACKGROUND</span>
+            </p>
+            <h2 id="background-title">从排期开发到配置驱动</h2>
           </div>
-          <p>把业务知识从开发排期中解耦</p>
+          <p>业务知识与开发排期解耦</p>
         </div>
         <div class="comparison">
           <article class="panel">
             <span class="small-label">BEFORE / 排期开发模式</span>
-            <h3>每一次变化，都回到开发队列</h3>
+            <h3>每次变化都回到开发队列</h3>
             <p class="steps">
               生产 / 产品提需求 → 开发排期 → 写规则 → 补边界情况
             </p>
@@ -89,7 +81,7 @@
           </article>
           <article class="panel after">
             <span class="small-label">AFTER / 配置驱动模式</span>
-            <h3>懂业务的人，直接定义要什么</h3>
+            <h3>业务同事直接定义要抽取什么</h3>
             <p class="steps">
               选择字段 → 描述含义与取法 → 系统拼装 → 逐层解析入库
             </p>
@@ -110,10 +102,13 @@
       <section id="pipeline" aria-labelledby="pipeline-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">02 / PIPELINE</p>
-            <h2 id="pipeline-title">流程全由代码编排，大模型只做判断与抽取</h2>
+            <p class="eyebrow">
+              <span class="chapter-no">02</span
+              ><span class="chapter-name">PIPELINE</span>
+            </p>
+            <h2 id="pipeline-title">流程由代码编排，大模型只做判断与抽取</h2>
           </div>
-          <p>点击节点，查看职责与输入输出；虚线框是迭代回路</p>
+          <p>点击节点查看职责与输入输出；虚线框为迭代回路</p>
         </div>
         <div class="pipeline-layout panel">
           <div class="flow-wrap">
@@ -500,8 +495,11 @@
       <section id="playground" aria-labelledby="playground-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">03 / LIVE PROMPT ASSEMBLY</p>
-            <h2 id="playground-title">改一条字段配置，看提示词如何变化</h2>
+            <p class="eyebrow">
+              <span class="chapter-no">03</span
+              ><span class="chapter-name">LIVE PROMPT ASSEMBLY</span>
+            </p>
+            <h2 id="playground-title">字段配置与提示词的实时拼装</h2>
           </div>
           <button id="reset" type="button" class="secondary">重置演示</button>
         </div>
@@ -529,7 +527,7 @@
             <p class="hint">勾选需要的字段；名称须唯一且非空。</p>
             <div id="fields"></div>
             <button type="button" id="add-field" class="secondary full">
-              ＋ 添加字段
+              添加字段
             </button>
           </article>
           <article class="document panel">
@@ -597,7 +595,10 @@
       <section id="funnel" aria-labelledby="funnel-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">04 / TABLE FUNNEL</p>
+            <p class="eyebrow">
+              <span class="chapter-no">04</span
+              ><span class="chapter-name">TABLE FUNNEL</span>
+            </p>
             <h2 id="funnel-title">表格定位漏斗：粗筛 → 精选 → 精抽</h2>
           </div>
           <span class="tag">全部为模拟数据</span>
@@ -613,10 +614,10 @@
           >
           <div class="chain-buttons">
             <button type="button" id="funnel-step" class="secondary">
-              单步 ▸
+              单步
             </button>
             <button type="button" id="funnel-play" class="secondary">
-              ▶ 自动播放
+              自动播放
             </button>
             <button type="button" id="funnel-reset" class="secondary">
               重置
@@ -683,7 +684,10 @@
       <section id="chunking" aria-labelledby="chunking-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">05 / LONG DOCUMENT · PROMPT CHAINING</p>
+            <p class="eyebrow">
+              <span class="chapter-no">05</span
+              ><span class="chapter-name">LONG DOCUMENT · PROMPT CHAINING</span>
+            </p>
             <h2 id="chunking-title">长文档：分块迭代抽取</h2>
           </div>
           <span class="tag">全部为模拟数据</span>
@@ -707,10 +711,10 @@
           </fieldset>
           <div class="chain-buttons">
             <button type="button" id="chain-step" class="secondary">
-              单步 ▸
+              单步
             </button>
             <button type="button" id="chain-play" class="secondary">
-              ▶ 自动播放
+              自动播放
             </button>
             <button type="button" id="chain-reset" class="secondary">
               重置
@@ -729,8 +733,8 @@
               aria-valuenow="0"
             >
               <i id="bar-doc"></i
-              ><b class="mark" style="left: 31.25%" title="100K 预算"></b
-              ><b class="mark cap" style="left: 80%" title="256K 上限"></b>
+              ><b class="mark" data-left="31.25" title="100K 预算"></b
+              ><b class="mark cap" data-left="80" title="256K 上限"></b>
             </div>
           </div>
           <div class="budget-row">
@@ -743,8 +747,8 @@
               aria-valuemax="320"
               aria-valuenow="0"
             >
-              <i id="bar-turn"></i><b class="mark" style="left: 31.25%"></b
-              ><b class="mark cap" style="left: 80%"></b>
+              <i id="bar-turn"></i><b class="mark" data-left="31.25"></b
+              ><b class="mark cap" data-left="80"></b>
             </div>
           </div>
           <p class="hint scale">
@@ -803,8 +807,11 @@
       <section id="template" aria-labelledby="template-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">06 / TEMPLATE & BOUNDARIES</p>
-            <h2 id="template-title">固定约束，动态注入业务知识</h2>
+            <p class="eyebrow">
+              <span class="chapter-no">06</span
+              ><span class="chapter-name">TEMPLATE & BOUNDARIES</span>
+            </p>
+            <h2 id="template-title">固定约束与动态注入</h2>
           </div>
           <p>模板独立维护，字段定义按配置生成</p>
         </div>
@@ -1003,7 +1010,10 @@
       <section id="validation" aria-labelledby="validation-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">07 / OUTPUT VALIDATION</p>
+            <p class="eyebrow">
+              <span class="chapter-no">07</span
+              ><span class="chapter-name">OUTPUT VALIDATION</span>
+            </p>
             <h2 id="validation-title">输出校验与容错</h2>
           </div>
           <span class="tag">演示为模拟示意</span>
@@ -1101,7 +1111,10 @@
       <section id="workflow" aria-labelledby="workflow-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">08 / WORKFLOW vs AGENT</p>
+            <p class="eyebrow">
+              <span class="chapter-no">08</span
+              ><span class="chapter-name">WORKFLOW vs AGENT</span>
+            </p>
             <h2 id="workflow-title">workflow 与 agent 的取舍</h2>
           </div>
           <p>本系统是代码编排的 LLM workflow，不是自治 agent</p>
@@ -1154,8 +1167,11 @@
       <section id="tiers" aria-labelledby="tiers-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">09 / MODEL TIERS</p>
-            <h2 id="tiers-title">模型高低搭配：按环节选档</h2>
+            <p class="eyebrow">
+              <span class="chapter-no">09</span
+              ><span class="chapter-name">MODEL TIERS</span>
+            </p>
+            <h2 id="tiers-title">模型高低搭配：按环节选档位</h2>
           </div>
           <span class="tag">成本与耗时为模拟示意</span>
         </div>
@@ -1217,10 +1233,11 @@
       <section id="evaluation" aria-labelledby="evaluation-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">10 / PROMPT EVALUATION</p>
-            <h2 id="evaluation-title">
-              提示词验证：用数据集回归，而不是凭感觉
-            </h2>
+            <p class="eyebrow">
+              <span class="chapter-no">10</span
+              ><span class="chapter-name">PROMPT EVALUATION</span>
+            </p>
+            <h2 id="evaluation-title">提示词验证：用数据集回归</h2>
           </div>
           <span class="tag warn">模拟示意，非实测</span>
         </div>
@@ -1407,7 +1424,10 @@
       <section id="optimize" aria-labelledby="optimize-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">11 / FUTURE OPTIMIZATIONS</p>
+            <p class="eyebrow">
+              <span class="chapter-no">11</span
+              ><span class="chapter-name">FUTURE OPTIMIZATIONS</span>
+            </p>
             <h2 id="optimize-title">后续可优化方向</h2>
           </div>
           <span class="tag warn">当时没有做 / 可优化，非已实现</span>

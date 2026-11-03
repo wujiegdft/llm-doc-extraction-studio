@@ -46,6 +46,9 @@ import {
 } from "./prompt.js";
 
 const $ = (selector) => document.querySelector(selector);
+document.querySelectorAll(".mark[data-left]").forEach((mark) => {
+  mark.style.left = `${mark.dataset.left}%`;
+});
 const text = (selector, value) => ($(selector).textContent = value);
 
 // ———— 03 提示词拼装演示（纯文本 / 表格两种模式） ————
@@ -288,7 +291,7 @@ let timer = null;
 function stopPlay() {
   clearInterval(timer);
   timer = null;
-  $("#chain-play").textContent = "▶ 自动播放";
+  $("#chain-play").textContent = "自动播放";
 }
 function bar(id, usedK, scaleK) {
   const el = $(id);
@@ -373,7 +376,7 @@ $("#chain-step").addEventListener("click", () => {
 $("#chain-play").addEventListener("click", () => {
   if (timer) return stopPlay();
   if (shown >= (longMode ? longSteps.length : 1)) shown = 0;
-  $("#chain-play").textContent = "❚❚ 暂停";
+  $("#chain-play").textContent = "暂停";
   renderChain();
   timer = setInterval(advance, 1800);
 });
@@ -457,7 +460,7 @@ let funnelSteps = funnelPlan();
 function stopFunnelPlay() {
   clearInterval(funnelTimer);
   funnelTimer = null;
-  $("#funnel-play").textContent = "▶ 自动播放";
+  $("#funnel-play").textContent = "自动播放";
 }
 function renderFunnel() {
   const step = funnelShown ? funnelSteps[funnelShown - 1] : null;
@@ -546,7 +549,7 @@ $("#funnel-step").addEventListener("click", () => {
 $("#funnel-play").addEventListener("click", () => {
   if (funnelTimer) return stopFunnelPlay();
   if (funnelShown >= funnelSteps.length) funnelShown = 0;
-  $("#funnel-play").textContent = "❚❚ 暂停";
+  $("#funnel-play").textContent = "暂停";
   renderFunnel();
   funnelTimer = setInterval(advanceFunnel, 1500);
 });
@@ -579,11 +582,21 @@ function renderBadges() {
   document.querySelectorAll("#flow [data-node]").forEach((g) => {
     const tier = nodeTier(g.dataset.node);
     g.querySelector(".tier-badge")?.remove();
+    g.querySelector(".tier-mark")?.remove();
     if (!tier) return;
     const rect = g.querySelector("rect");
+    const right = Number(rect.getAttribute("width")) - 10;
+    // 实心圆点 = 高配，空心圆点 = 轻量
+    const mark = document.createElementNS(SVG_NS, "circle");
+    mark.setAttribute("class", `tier-mark ${tier}`);
+    mark.setAttribute("cx", String(right - 34));
+    mark.setAttribute("cy", "18");
+    mark.setAttribute("r", "3.5");
+    mark.setAttribute("stroke-width", "1.2");
+    g.append(mark);
     const badge = document.createElementNS(SVG_NS, "text");
     badge.setAttribute("class", `tier-badge ${tier}`);
-    badge.setAttribute("x", String(Number(rect.getAttribute("width")) - 10));
+    badge.setAttribute("x", String(right));
     badge.setAttribute("y", "22");
     badge.textContent = price[tier].label;
     g.append(badge);
@@ -722,10 +735,8 @@ function renderEval() {
     const label = document.createElement("span");
     label.className = "eval-value";
     label.textContent = `${value}%`;
-    wrap.style.display = "flex";
-    wrap.style.alignItems = "center";
+    wrap.className = "eval-cell";
     wrap.append(meter, label);
-    meter.style.flex = "1";
     td(wrap);
     td(document.createTextNode(`${frontierRef[field]}%`));
     td(document.createTextNode(`${frontierRef[field] - value} 个百分点`));
