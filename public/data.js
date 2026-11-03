@@ -192,7 +192,7 @@ export const nodes = {
     input: "每页 20 个目录项 + 待抽字段",
     output: "每页返回命中的表格编号，没有就说没有",
     description:
-      "约 100 个表格每 20 个一页，问 5 次。页之间没有依赖，可并行，这是优化提示。让模型回答“哪个表格里有这个数据，没有就说没有”。",
+      "约 100 个表格每 20 个一页，问 5 次。页之间没有依赖，可并行，这是优化提示。让模型回答“哪个表格里有这个数据，没有就说没有”。实际配置为轻量档。",
   },
   pick: {
     title: "精选（再问一遍）",
@@ -200,7 +200,7 @@ export const nodes = {
     input: "粗筛命中的候选表格目录项",
     output: "最合适的一个表格编号",
     description:
-      "只有多个表格命中时才需要：把候选列出来，再问一次模型选最合适的。只命中一个就直接进入精抽。",
+      "只有多个表格命中时才需要：把候选列出来，再问一次模型选最合适的。只命中一个就直接进入精抽。这一步实际配置为高配档：选错表则后面全错，且调用少、输入小，成本增量很小。",
   },
   tablex: {
     title: "精抽（单个表格）",
@@ -424,4 +424,133 @@ export const funnelSizes = {
   coarsePage: 12,
   pick: 2,
   extract: 8,
+};
+
+// ———— 模型档位：按环节选高配 / 轻量（均为模拟示意） ————
+// weight：该环节在典型任务中的相对调用量（输入量 × 次数），仅用于示意成本。
+export const tierStages = [
+  {
+    id: "coarse",
+    name: "表格粗筛",
+    node: "coarse",
+    weight: 60,
+    tier: "light",
+    reason:
+      "只看目录项做“有没有”的判断，输入短但页数多，调用量大；轻量更划算。",
+  },
+  {
+    id: "pick",
+    name: "表格精选（多命中时）",
+    node: "pick",
+    weight: 2,
+    tier: "high",
+    reason:
+      "要在候选中分辨单位、行列头的细微差别，选错则后面全错；调用少、输入小，用高配的成本增量很小。",
+  },
+  {
+    id: "tablex",
+    name: "表格精抽",
+    node: "tablex",
+    weight: 8,
+    tier: "light",
+    reason: "范围已缩到一张表，任务明确，轻量足够。",
+  },
+  {
+    id: "chunk",
+    name: "长文档分块抽取",
+    node: "llm",
+    weight: 160,
+    tier: "light",
+    reason:
+      "多块、每块输入大，调用量最大，对成本最敏感；靠提示词约束来保证效果。",
+  },
+  {
+    id: "short",
+    name: "短文档抽取",
+    node: "llm",
+    weight: 30,
+    tier: "light",
+    reason: "一次调用、任务简单，轻量足够。",
+  },
+];
+// 模拟的回归结果：各环节在轻量 / 高配下的准确率（%）。模型升级后可能整体变好，也可能在个别环节变差。
+export const tierRegression = {
+  old: {
+    coarse: { light: 92, high: 94 },
+    pick: { light: 84, high: 96 },
+    tablex: { light: 93, high: 95 },
+    chunk: { light: 91, high: 94 },
+    short: { light: 95, high: 96 },
+  },
+  upgraded: {
+    coarse: { light: 94, high: 95 },
+    pick: { light: 94, high: 96 },
+    tablex: { light: 88, high: 95 },
+    chunk: { light: 93, high: 95 },
+    short: { light: 96, high: 96 },
+  },
+};
+
+// ———— 提示词验证：版本对比（均为模拟示意，不是实测） ————
+export const evalTarget = { min: 90, max: 95 };
+export const evalFields = ["发生日期", "金额", "主体名称", "结算状态"];
+// 前沿模型在同一数据集上的参考表现（模拟）
+export const frontierRef = {
+  发生日期: 97,
+  金额: 96,
+  主体名称: 98,
+  结算状态: 95,
+};
+export const evalVersions = [
+  {
+    id: "v1",
+    label: "v1 基础模板",
+    change: "只有基本规则，字段说明较简略。",
+    fields: { 发生日期: 78, 金额: 71, 主体名称: 85, 结算状态: 66 },
+    metrics: {
+      漏抽率: 12,
+      乱填率: 18,
+      粗筛命中率: 82,
+      精选选对率: 70,
+      相对成本: 18,
+      相对耗时: 40,
+    },
+  },
+  {
+    id: "v2",
+    label: "v2 强化 null 与单位",
+    change: "强调“找不到填 null、保留原文单位”，补充字段取值说明。",
+    fields: { 发生日期: 88, 金额: 86, 主体名称: 92, 结算状态: 81 },
+    metrics: {
+      漏抽率: 8,
+      乱填率: 9,
+      粗筛命中率: 90,
+      精选选对率: 82,
+      相对成本: 20,
+      相对耗时: 42,
+    },
+  },
+  {
+    id: "v3",
+    label: "v3 区分易混字段",
+    change:
+      "说明“总额与预付款要区分”“不取文档生成日期”，表格提示加入不跨行串值。",
+    fields: { 发生日期: 94, 金额: 92, 主体名称: 95, 结算状态: 90 },
+    metrics: {
+      漏抽率: 4,
+      乱填率: 3,
+      粗筛命中率: 95,
+      精选选对率: 91,
+      相对成本: 23,
+      相对耗时: 45,
+    },
+  },
+];
+export const metricNotes = {
+  漏抽率: { unit: "%", better: "low", hint: "有值却没抽到" },
+  乱填率: { unit: "%", better: "low", hint: "该为 null 却填了值" },
+  粗筛命中率: { unit: "%", better: "high", hint: "目标表格被粗筛选入候选" },
+  精选选对率: { unit: "%", better: "high", hint: "多命中时选对表格" },
+  相对成本: { unit: "", better: "low", hint: "以前沿模型 = 100" },
+  相对耗时: { unit: "", better: "low", hint: "以前沿模型 = 100" },
 };

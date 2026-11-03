@@ -15,8 +15,16 @@ import {
   funnelFields,
   funnelHits,
   funnelSizes,
+  tierStages,
+  tierRegression,
+  evalTarget,
+  evalFields,
+  frontierRef,
+  evalVersions,
+  metricNotes,
   nodes,
 } from "./data.js";
+import { estimate, price, verdict } from "./tiers.js";
 import {
   assembleChunkPrompt,
   assembleCoarsePrompt,
@@ -552,6 +560,219 @@ $("#multi-hit").addEventListener("change", (event) => {
   renderFunnel();
 });
 
+// ———— 08 模型档位：按环节选高配 / 轻量（模拟） ————
+const actualTiers = () =>
+  Object.fromEntries(tierStages.map((s) => [s.id, s.tier]));
+let tiers = actualTiers();
+let modelVersion = "old";
+const SVG_NS = "http://www.w3.org/2000/svg";
+// 流程图节点对应的环节：分块与短文档共用“LLM 抽取”节点，取两者中较高的档位展示。
+function nodeTier(nodeKey) {
+  const ids = tierStages.filter((s) => s.node === nodeKey).map((s) => s.id);
+  if (!ids.length) return null;
+  return ids.some((id) => tiers[id] === "high") ? "high" : "light";
+}
+function renderBadges() {
+  document.querySelectorAll("#flow [data-node]").forEach((g) => {
+    const tier = nodeTier(g.dataset.node);
+    g.querySelector(".tier-badge")?.remove();
+    if (!tier) return;
+    const rect = g.querySelector("rect");
+    const badge = document.createElementNS(SVG_NS, "text");
+    badge.setAttribute("class", `tier-badge ${tier}`);
+    badge.setAttribute("x", String(Number(rect.getAttribute("width")) - 10));
+    badge.setAttribute("y", "22");
+    badge.textContent = price[tier].label;
+    g.append(badge);
+    const base = g.getAttribute("aria-label").split("，档位")[0];
+    g.setAttribute("aria-label", `${base}，档位：${price[tier].label}`);
+  });
+}
+function renderTiers() {
+  const rows = $("#tier-rows");
+  rows.replaceChildren();
+  for (const stage of tierStages) {
+    const reg = tierRegression[modelVersion][stage.id];
+    const suggest = verdict(reg);
+    const tr = document.createElement("tr");
+    const cell = (node) => {
+      const td = document.createElement("td");
+      td.append(node);
+      tr.append(td);
+      return td;
+    };
+    cell(document.createTextNode(stage.name));
+    const select = document.createElement("select");
+    select.setAttribute("aria-label", `${stage.name}的模型档位`);
+    for (const key of ["light", "high"]) {
+      const option = new Option(
+        price[key].label,
+        key,
+        false,
+        tiers[stage.id] === key,
+      );
+      select.append(option);
+    }
+    select.addEventListener("change", () => {
+      tiers[stage.id] = select.value;
+      renderTiers();
+      renderBadges();
+    });
+    cell(select);
+    cell(document.createTextNode(stage.reason));
+    cell(document.createTextNode(`${reg.light}%`));
+    cell(document.createTextNode(`${reg.high}%`));
+    const note = document.createElement("span");
+    note.className = suggest === tiers[stage.id] ? "pass" : "fail";
+    note.textContent =
+      suggest === tiers[stage.id]
+        ? `建议${price[suggest].label}（与当前一致）`
+        : `建议${price[suggest].label}（与当前不同）`;
+    cell(note);
+    rows.append(tr);
+  }
+  const now = estimate(tierStages, tiers);
+  const meters = $("#tier-meters");
+  meters.replaceChildren();
+  for (const [label, value, key] of [
+    ["相对成本", now.cost, "cost"],
+    ["相对耗时", now.time, "time"],
+  ]) {
+    const row = document.createElement("div");
+    row.className = "size-row";
+    const name = document.createElement("span");
+    name.textContent = `${label} · 约 ${value.toFixed(0)}`;
+    const meter = document.createElement("div");
+    meter.className = "meter";
+    meter.setAttribute("role", "progressbar");
+    meter.setAttribute("aria-label", `${label}（模拟，全部高配为 100）`);
+    meter.setAttribute("aria-valuemin", "0");
+    meter.setAttribute("aria-valuemax", "100");
+    meter.setAttribute("aria-valuenow", value.toFixed(0));
+    const fill = document.createElement("i");
+    fill.style.width = `${Math.max(1.5, value)}%`;
+    meter.append(fill);
+    row.append(name, meter);
+    meters.append(row);
+  }
+  const high = tierStages
+    .filter((s) => tiers[s.id] === "high")
+    .map((s) => s.name);
+  text(
+    "#tier-note",
+    `当前高配环节：${high.length ? high.join("、") : "无"}。成本与耗时按各环节典型调用量加权，仅为模拟示意。`,
+  );
+}
+document.querySelectorAll('input[name="model-version"]').forEach((radio) =>
+  radio.addEventListener("change", () => {
+    modelVersion = radio.value;
+    renderTiers();
+  }),
+);
+$("#tier-apply").addEventListener("click", () => {
+  for (const stage of tierStages)
+    tiers[stage.id] = verdict(tierRegression[modelVersion][stage.id]);
+  renderTiers();
+  renderBadges();
+});
+$("#tier-reset").addEventListener("click", () => {
+  tiers = actualTiers();
+  renderTiers();
+  renderBadges();
+});
+
+// ———— 09 提示词验证：版本对比（模拟示意） ————
+let evalVersion = "v3";
+function renderEval() {
+  const version = evalVersions.find((v) => v.id === evalVersion);
+  text("#eval-change", `${version.label}：${version.change}`);
+  const rows = $("#eval-rows");
+  rows.replaceChildren();
+  let reached = 0;
+  for (const field of evalFields) {
+    const value = version.fields[field];
+    const ok = value >= evalTarget.min;
+    if (ok) reached++;
+    const tr = document.createElement("tr");
+    const td = (child) => {
+      const cell = document.createElement("td");
+      cell.append(child);
+      tr.append(cell);
+    };
+    td(document.createTextNode(field));
+    const wrap = document.createElement("div");
+    const meter = document.createElement("div");
+    meter.className = "eval-meter";
+    meter.setAttribute("role", "progressbar");
+    meter.setAttribute("aria-label", `${field}准确率（模拟）`);
+    meter.setAttribute("aria-valuemin", "0");
+    meter.setAttribute("aria-valuemax", "100");
+    meter.setAttribute("aria-valuenow", String(value));
+    const fill = document.createElement("i");
+    fill.className = ok ? "ok" : "";
+    fill.style.width = `${value}%`;
+    const band = document.createElement("b");
+    band.className = "band";
+    band.style.left = `${evalTarget.min}%`;
+    band.style.width = `${evalTarget.max - evalTarget.min}%`;
+    meter.append(fill, band);
+    const label = document.createElement("span");
+    label.className = "eval-value";
+    label.textContent = `${value}%`;
+    wrap.style.display = "flex";
+    wrap.style.alignItems = "center";
+    wrap.append(meter, label);
+    meter.style.flex = "1";
+    td(wrap);
+    td(document.createTextNode(`${frontierRef[field]}%`));
+    td(document.createTextNode(`${frontierRef[field] - value} 个百分点`));
+    const mark = document.createElement("span");
+    mark.className = ok ? "pass" : "fail";
+    mark.textContent = ok ? "达到目标线" : `低于 ${evalTarget.min}%`;
+    td(mark);
+    rows.append(tr);
+  }
+  const all = reached === evalFields.length;
+  text(
+    "#eval-summary",
+    all
+      ? `模拟：${version.label} 在全部字段达到目标线（${evalTarget.min}%–${evalTarget.max}%），可上线。`
+      : `模拟：${version.label} 有 ${evalFields.length - reached} 个字段低于 ${evalTarget.min}%，不达标，继续改提示词。`,
+  );
+  const grid = $("#eval-metrics");
+  grid.replaceChildren();
+  const index = evalVersions.indexOf(version);
+  const prev = evalVersions[index - 1];
+  for (const [name, note] of Object.entries(metricNotes)) {
+    const value = version.metrics[name];
+    const box = document.createElement("div");
+    box.className = "metric";
+    const title = document.createElement("span");
+    title.textContent = name;
+    const big = document.createElement("strong");
+    big.textContent = `${value}${note.unit}`;
+    box.append(title, big);
+    if (prev) {
+      const diff = value - prev.metrics[name];
+      const better = note.better === "high" ? diff > 0 : diff < 0;
+      const delta = document.createElement("em");
+      delta.className = diff === 0 ? "" : better ? "pass" : "fail";
+      delta.textContent = `较 ${prev.id} ${diff > 0 ? "+" : ""}${diff}`;
+      big.append(delta);
+    }
+    const hint = document.createElement("small");
+    hint.textContent = `${note.hint}（模拟）`;
+    box.append(hint);
+    grid.append(box);
+  }
+}
+document.querySelectorAll('input[name="eval-version"]').forEach((radio) =>
+  radio.addEventListener("change", () => {
+    evalVersion = radio.value;
+    renderEval();
+  }),
+);
+
 // ———— 02 流程图 ————
 function selectNode(node) {
   document
@@ -610,4 +831,7 @@ text("#next-chunk-template", nextChunkTemplate);
 showMode();
 renderChain();
 renderFunnel();
+renderTiers();
+renderBadges();
+renderEval();
 selectNode("assembly");

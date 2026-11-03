@@ -137,3 +137,52 @@ test("单命中模式下只有表格 3 含目标行头；精抽带完整表格�
       prompt.includes("带上表格单位"),
   );
 });
+
+import { estimate, verdict } from "../public/tiers.js";
+import {
+  tierStages,
+  tierRegression,
+  evalVersions,
+  evalFields,
+  evalTarget,
+} from "../public/data.js";
+
+test("成本估算：全部高配为 100；精选单独用高配时成本只小幅上升", () => {
+  const all = (tier) => Object.fromEntries(tierStages.map((s) => [s.id, tier]));
+  assert.equal(Math.round(estimate(tierStages, all("high")).cost), 100);
+  const actual = Object.fromEntries(tierStages.map((s) => [s.id, s.tier]));
+  const light = estimate(tierStages, all("light")).cost;
+  const mixed = estimate(tierStages, actual).cost;
+  assert.ok(light < mixed && mixed < light * 1.2, `${light} ${mixed}`);
+  assert.ok(
+    estimate(tierStages, all("light")).time <
+      estimate(tierStages, all("high")).time,
+  );
+});
+
+test("档位建议：达标且差距小才用轻量；模型升级后同一环节结论可反转", () => {
+  assert.equal(verdict({ light: 91, high: 93 }), "light");
+  assert.equal(verdict({ light: 89, high: 90 }), "high");
+  assert.equal(verdict({ light: 92, high: 97 }), "high");
+  assert.equal(verdict(tierRegression.old.pick), "high");
+  assert.equal(verdict(tierRegression.upgraded.pick), "light");
+  assert.equal(verdict(tierRegression.old.tablex), "light");
+  assert.equal(verdict(tierRegression.upgraded.tablex), "high");
+});
+
+test("版本对比：v1 不达标、v3 全字段达到下限；全文不含具体模型名", async () => {
+  const reached = (v) => evalFields.every((f) => v.fields[f] >= evalTarget.min);
+  assert.equal(reached(evalVersions[0]), false);
+  assert.equal(reached(evalVersions[2]), true);
+  const { readFileSync } = await import("node:fs");
+  const text = ["index.html", "data.js", "app.js", "prompt.js", "tiers.js"]
+    .map((f) =>
+      readFileSync(new URL(`../public/${f}`, import.meta.url), "utf8"),
+    )
+    .join("\n");
+  assert.ok(
+    !/gpt|claude|openai|anthropic|gemini|qwen|deepseek|llama|kimi|glm/i.test(
+      text,
+    ),
+  );
+});

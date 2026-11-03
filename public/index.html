@@ -23,11 +23,12 @@
         ></a
       >
       <nav aria-label="章节导航">
-        <a href="#background">01 背景</a><a href="#pipeline">02 链路</a
-        ><a href="#playground">03 拼装</a><a href="#funnel">04 表格漏斗</a
-        ><a href="#chunking">05 分块</a><a href="#template">06 模板</a
-        ><a href="#workflow">07 Workflow</a><a href="#optimize">08 可优化</a
-        ><a href="#iteration">09 迭代</a>
+        <a href="#background">背景</a><a href="#pipeline">链路</a
+        ><a href="#playground">拼装</a><a href="#funnel">漏斗</a
+        ><a href="#chunking">分块</a><a href="#template">模板</a
+        ><a href="#workflow">Workflow</a><a href="#tiers">档位</a
+        ><a href="#evaluation">验证</a><a href="#optimize">可优化</a
+        ><a href="#iteration">迭代</a>
       </nav>
       <span class="version">V1 · 静态演示</span>
     </header>
@@ -303,7 +304,7 @@
                 transform="translate(670 22)"
               >
                 <rect width="130" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">T2 / LLM 调用</text>
+                <text x="14" y="22" class="node-number">T2 / 调用</text>
                 <text x="14" y="45">粗筛·分页问</text>
               </g>
               <g
@@ -316,7 +317,7 @@
                 transform="translate(820 22)"
               >
                 <rect width="120" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">T3 / LLM 调用</text>
+                <text x="14" y="22" class="node-number">T3 / 调用</text>
                 <text x="14" y="45">精选·再问</text>
               </g>
               <g
@@ -329,7 +330,7 @@
                 transform="translate(960 22)"
               >
                 <rect width="110" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">T4 / LLM 调用</text>
+                <text x="14" y="22" class="node-number">T4 / 调用</text>
                 <text x="14" y="45">精抽·单表</text>
               </g>
               <g
@@ -368,7 +369,7 @@
                 transform="translate(520 305)"
               >
                 <rect width="150" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">07 / LLM</text>
+                <text x="14" y="22" class="node-number">07 / 调用</text>
                 <text x="14" y="45">LLM 抽取</text>
               </g>
               <g
@@ -450,7 +451,7 @@
                 <text x="14" y="45">更新待抽字段</text>
               </g>
               <text x="540" y="537" text-anchor="middle" class="flow-caption">
-                流程由代码编排；大模型只负责判断（定位）与抽取
+                流程由代码编排；调用模型的节点标注档位（高配 / 轻量，可配置）
               </text>
             </svg>
           </div>
@@ -1021,10 +1022,263 @@
         </p>
       </section>
 
+      <section id="tiers" aria-labelledby="tiers-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">08 / MODEL TIERS</p>
+            <h2 id="tiers-title">模型高低搭配：按环节选档</h2>
+          </div>
+          <span class="tag">成本与耗时为模拟示意</span>
+        </div>
+        <p class="section-intro">
+          系统有两档模型：<strong>高配</strong>（准确率高，但更贵更慢）和<strong>轻量</strong>（便宜、更快）。必须高配才行的环节用高配，其余用轻量更划算。<strong>每个环节的档位都是可配置项</strong>，要根据验证结果不断调整。
+        </p>
+        <div class="chain-controls">
+          <fieldset class="mode-switch">
+            <legend>模型版本（模拟回归）</legend>
+            <label
+              ><input type="radio" name="model-version" value="old" checked />
+              旧版本</label
+            >
+            <label
+              ><input type="radio" name="model-version" value="upgraded" />
+              升级后</label
+            >
+          </fieldset>
+          <div class="chain-buttons">
+            <button type="button" id="tier-apply" class="secondary">
+              按回归结果应用建议档位
+            </button>
+            <button type="button" id="tier-reset" class="secondary">
+              恢复实际配置
+            </button>
+          </div>
+        </div>
+        <div class="panel table-wrap">
+          <table class="tier-table">
+            <caption class="sr-only">
+              各环节模型档位、理由与模拟回归结果
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">环节</th>
+                <th scope="col">档位（可切换）</th>
+                <th scope="col">理由</th>
+                <th scope="col">轻量准确率</th>
+                <th scope="col">高配准确率</th>
+                <th scope="col">回归建议</th>
+              </tr>
+            </thead>
+            <tbody id="tier-rows"></tbody>
+          </table>
+        </div>
+        <div class="panel tier-summary">
+          <h3 class="plain-h">
+            相对成本与耗时（以“全部环节用高配 = 100”，模拟示意）
+          </h3>
+          <div id="tier-meters"></div>
+          <p id="tier-note" class="hint" role="status"></p>
+        </div>
+        <p class="section-note">
+          实际配置：表格精选（多命中时选哪个表格）用高配，粗筛、分块抽取、短文档抽取、表格精抽基本都用轻量。模型版本升级后要重新评估：旧版本下必须用高配的环节，升级后可能轻量就够了，反之亦然（切换上方“模型版本”可看模拟示例）。这也是
+          workflow 相对自治 agent 的优势：每个环节可单独选模型、单独调优。
+        </p>
+      </section>
+
+      <section id="evaluation" aria-labelledby="evaluation-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">09 / PROMPT EVALUATION</p>
+            <h2 id="evaluation-title">
+              提示词验证：用数据集回归，而不是凭感觉
+            </h2>
+          </div>
+          <span class="tag warn">模拟示意，非实测</span>
+        </div>
+        <p class="section-intro">
+          目的：通过调整提示词，让相对低配、便宜的生产模型接近最前沿模型的效果，从而降低费用。<strong
+            >设计目标：正常情况下所有字段准确率达到 90%–95%</strong
+          >（这是目标，不是已达成的实测结果）。
+        </p>
+        <div class="dataset-grid">
+          <article class="panel">
+            <span class="small-label">人工黄金集</span>
+            <h3>人工核对过标准答案</h3>
+            <p>做了一部分，规模有限。全人工标注太耗人力，所以不能只靠它。</p>
+          </article>
+          <article class="panel">
+            <span class="small-label">参考标注（前沿模型）</span>
+            <h3>用最前沿的模型对更多样本先抽一遍</h3>
+            <p>
+              该模型不是生产实际使用的模型，结果作为参考答案补充数据集，和人工黄金集区分标注。有人工抽查，但覆盖有限，抽查比例不算高。
+            </p>
+          </article>
+          <article class="panel">
+            <span class="small-label">生产反馈回流</span>
+            <h3>生产同事发现的 bad case</h3>
+            <p>
+              使用中发现抽错的案例反馈给开发，开发标注正确结果后加回验证集。相当于把一部分抽查工作转给了最终使用者，也让验证集持续覆盖真实边界情况。
+            </p>
+          </article>
+        </div>
+        <div class="panel loop-panel">
+          <h3 class="plain-h">验证闭环</h3>
+          <div class="flow-wrap">
+            <svg
+              id="eval-loop"
+              viewBox="0 0 920 330"
+              role="img"
+              aria-label="提示词验证闭环：提示词改动，在数据集回归，对比指标，达标则上线，不达标回到提示词改动；上线后生产反馈 bad case，标注正确答案，回流验证集，下次回归；模型升级时同样用数据集回归后再调整档位"
+            >
+              <defs>
+                <marker
+                  id="arrow2"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="7"
+                  refY="4"
+                  orient="auto"
+                >
+                  <path d="M0 0 L8 4 L0 8" fill="currentColor" />
+                </marker>
+              </defs>
+              <rect
+                class="loop-box"
+                x="236"
+                y="26"
+                width="480"
+                height="92"
+                rx="14"
+              />
+              <g
+                class="connections"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                marker-end="url(#arrow2)"
+              >
+                <path d="M190 72 H250" />
+                <path d="M440 72 H480" />
+                <path d="M630 72 H670" />
+                <path d="M790 98 V150" />
+                <path d="M850 72 V14 H85 V47" />
+                <path d="M790 204 V250" />
+                <path d="M670 275 H630" />
+                <path d="M480 275 H440" />
+                <path d="M345 250 V98" />
+                <path d="M105 150 V240 H250" />
+              </g>
+              <text x="462" y="140" text-anchor="middle" class="flow-caption">
+                回归闭环
+              </text>
+              <text x="470" y="10" text-anchor="middle" class="flow-caption">
+                不达标，继续改提示词
+              </text>
+              <text x="800" y="128" class="flow-caption">达标</text>
+              <text x="800" y="232" class="flow-caption">生产使用</text>
+              <text x="358" y="176" class="flow-caption">下次回归</text>
+              <text x="20" y="136" class="flow-caption">
+                用同一数据集回归，再调整档位
+              </text>
+              <g class="flow-node static" transform="translate(20 47)">
+                <rect width="170" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">1 / 开发</text>
+                <text x="14" y="40">提示词改动</text>
+              </g>
+              <g class="flow-node static" transform="translate(250 47)">
+                <rect width="190" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">2 / 数据集</text>
+                <text x="14" y="40">在数据集上回归</text>
+              </g>
+              <g class="flow-node static" transform="translate(480 47)">
+                <rect width="150" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">3 / 新旧版本</text>
+                <text x="14" y="40">对比指标</text>
+              </g>
+              <g class="flow-node static" transform="translate(670 47)">
+                <rect width="180" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">4 / 判定</text>
+                <text x="14" y="40">是否达标？</text>
+              </g>
+              <g class="flow-node static llm" transform="translate(670 154)">
+                <rect width="190" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">达标</text>
+                <text x="14" y="40">上线</text>
+              </g>
+              <g class="flow-node static" transform="translate(670 250)">
+                <rect width="190" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">A / 生产同事</text>
+                <text x="14" y="40">反馈 bad case</text>
+              </g>
+              <g class="flow-node static" transform="translate(480 250)">
+                <rect width="150" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">B / 开发</text>
+                <text x="14" y="40">标注正确答案</text>
+              </g>
+              <g class="flow-node static" transform="translate(250 250)">
+                <rect width="190" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">C / 数据集</text>
+                <text x="14" y="40">回流验证集</text>
+              </g>
+              <g class="flow-node static" transform="translate(20 150)">
+                <rect width="170" height="50" rx="10" />
+                <text x="14" y="20" class="node-number">触发</text>
+                <text x="14" y="40">模型版本升级</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hint">
+            指标：字段级准确率、漏抽（召回）、该为 null
+            时是否乱填、表格粗筛命中率、精选选对率，以及成本和耗时。多轮回归迭代提示词。模型升级时，用同一数据集回归，再决定是否调整各环节的档位（见<a
+              href="#tiers"
+              >模型档位</a
+            >）。
+          </p>
+        </div>
+        <div class="chain-controls">
+          <fieldset class="mode-switch">
+            <legend>提示词版本（模拟）</legend>
+            <label
+              ><input type="radio" name="eval-version" value="v1" /> v1</label
+            >
+            <label
+              ><input type="radio" name="eval-version" value="v2" /> v2</label
+            >
+            <label
+              ><input type="radio" name="eval-version" value="v3" checked />
+              v3</label
+            >
+          </fieldset>
+          <p id="eval-change" class="hint"></p>
+        </div>
+        <div class="panel table-wrap">
+          <table class="tier-table">
+            <caption class="sr-only">
+              所选提示词版本下各字段的轻量模型准确率，与设计目标和前沿模型参考答案对照（模拟）
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">字段</th>
+                <th scope="col">轻量模型准确率（对照目标 90%–95%）</th>
+                <th scope="col">前沿模型参考</th>
+                <th scope="col">差距</th>
+                <th scope="col">对照目标</th>
+              </tr>
+            </thead>
+            <tbody id="eval-rows"></tbody>
+          </table>
+        </div>
+        <p id="eval-summary" class="demo-status" role="status"></p>
+        <div id="eval-metrics" class="metric-grid"></div>
+        <p class="section-note">
+          所有数值均为“模拟示意”，用于说明如何对比提示词版本，不是实测结果。参考答案来自前沿模型，只抽查了一部分，不能当作人工黄金标准；也不是系统性的全量人工复核，持续依赖生产反馈补充真实边界情况。
+        </p>
+      </section>
+
       <section id="optimize" aria-labelledby="optimize-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">08 / FUTURE OPTIMIZATIONS</p>
+            <p class="eyebrow">10 / FUTURE OPTIMIZATIONS</p>
             <h2 id="optimize-title">后续可优化方向</h2>
           </div>
           <span class="tag warn">当时没有做 / 可优化，非已实现</span>
@@ -1059,17 +1313,32 @@
       <section id="iteration" aria-labelledby="iteration-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">09 / RESULTS & ITERATION</p>
+            <p class="eyebrow">11 / RESULTS & ITERATION</p>
             <h2 id="iteration-title">效果与迭代</h2>
           </div>
           <span class="tag">待补充</span>
         </div>
+        <div class="iter-grid">
+          <article class="panel">
+            <span class="small-label">设计目标</span>
+            <h3>正常情况下所有字段准确率 90%–95%</h3>
+            <p>这是设计目标，不是已达成的实测结果。</p>
+          </article>
+          <article class="panel">
+            <span class="small-label">验证方法</span>
+            <h3>数据集回归 + 生产反馈回流</h3>
+            <p>
+              人工黄金集（规模有限）加前沿模型参考标注（有抽查，覆盖有限）；每次改提示词在数据集上新旧对比；生产发现的
+              bad case 标注后回流验证集。
+            </p>
+          </article>
+        </div>
         <div class="placeholder">
           <span aria-hidden="true">＋</span>
           <div>
-            <h3>为下一轮讲解留白</h3>
+            <h3>待补充</h3>
             <p>
-              后续补充真实评估口径、脱敏案例与边界情况的迭代过程。当前不展示未经验证的准确率或收益数字。
+              数据集的实际规模、各字段的实测准确率、成本与耗时的实际节省，以及具体的迭代案例。没有把握的数字暂不填写，不用模拟数据代替。
             </p>
           </div>
         </div>

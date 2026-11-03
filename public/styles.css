@@ -636,6 +636,7 @@ footer {
   padding: 0 6px;
 }
 .mode-switch label {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -818,6 +819,174 @@ dl.wide {
   font-size: 13px;
   color: var(--muted);
 }
+.flow-node.static {
+  cursor: default;
+}
+.flow-node.static:hover rect {
+  fill: var(--surface);
+  stroke: var(--line);
+}
+.flow-node.static.llm:hover rect {
+  fill: var(--llm);
+  stroke: var(--llm-ink);
+}
+.tier-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-anchor: end;
+  pointer-events: none;
+}
+.flow-node .tier-badge.high {
+  fill: var(--danger);
+}
+.flow-node .tier-badge.light {
+  fill: var(--llm-ink);
+}
+.table-wrap {
+  padding: 0;
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+.tier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 760px;
+}
+.tier-table th,
+.tier-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.tier-table th {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 650;
+  background: var(--code);
+}
+.tier-table td:nth-child(3) {
+  color: var(--muted);
+  min-width: 260px;
+}
+.tier-table select {
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.tag.light {
+  color: var(--llm-ink);
+}
+.tier-summary {
+  margin-bottom: 8px;
+}
+.dataset-grid,
+.iter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.iter-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+.dataset-grid p,
+.iter-grid p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.dataset-grid h3,
+.iter-grid h3 {
+  font-size: 16px;
+}
+.loop-panel {
+  margin-bottom: 18px;
+}
+.loop-panel .flow-wrap {
+  padding: 0;
+  overflow-x: auto;
+}
+.loop-panel svg {
+  min-width: 760px;
+}
+.loop-panel svg {
+  color: var(--line);
+}
+.eval-meter {
+  position: relative;
+  height: 14px;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  min-width: 180px;
+}
+.eval-meter i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 7px;
+  background: var(--danger);
+  opacity: 0.75;
+}
+.eval-meter i.ok {
+  background: var(--llm-ink);
+}
+.eval-meter .band {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  background: var(--accent);
+  opacity: 0.22;
+  border-left: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+.eval-value {
+  font-weight: 650;
+  margin-left: 8px;
+}
+.pass {
+  color: var(--llm-ink);
+  font-weight: 650;
+}
+.fail {
+  color: var(--danger);
+  font-weight: 650;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.metric {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.metric span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.metric strong {
+  font-size: 24px;
+  font-weight: 650;
+}
+.metric em {
+  font-style: normal;
+  font-size: 12px;
+  margin-left: 8px;
+}
+.metric small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -903,6 +1072,14 @@ dl.wide {
   }
 }
 @media (max-width: 1100px) {
+  nav {
+    overflow-x: auto;
+  }
+  .dataset-grid,
+  .iter-grid,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
   .size-row {
     grid-template-columns: 1fr;
     gap: 6px;
