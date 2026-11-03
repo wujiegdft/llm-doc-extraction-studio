@@ -142,6 +142,12 @@ npm ci
 npm run dev
 ```
 
+### Amp orb 环境
+
+`.agents/setup` 检查 orb 自带的 Node.js（≥22）与 npm，按锁文件安装开发依赖；已有依赖时仅做快速检查，不改写清单或锁文件。无需构建、数据库或 Cloudflare 登录。
+
+Amp 将准备好的环境保存为项目快照（snapshot），新 orb 命中相同快照时跳过安装。`.agents/resume` 仅检查 Node.js 与 Wrangler 依赖是否就绪，不安装依赖、不认证、不部署。脚本进入项目默认分支后，对后续新 orb 生效。
+
 部署环境需预先注入 `CLOUDFLARE_API_TOKEN`，不要将令牌写入仓库。令牌需具有配置账户的 Workers Scripts Edit 权限，并能为 `wujie1123.shop` 区域（Zone）部署自定义域名；当前项目令牌已验证可完成部署。账户 ID 已在 `wrangler.jsonc` 的 `account_id` 中配置。
 
 ```sh

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+TIMEFORMAT='[setup] Step completed in %3R seconds'
+
+echo '[setup] Checking the orb Node.js toolchain (requires Node.js >=22)'
+node -e 'if (Number(process.versions.node.split(".")[0]) < 22) { console.error("Node.js >=22 is required"); process.exit(1); }'
+node --version
+npm --version
+
+# npm reuses the lockfile and installed packages; --no-save keeps manifests intact.
+# Include Wrangler even if the orb inherits NODE_ENV=production.
+echo '[setup] Installing or checking locked development dependencies'
+time npm install --no-save --include=dev --prefer-offline --no-audit --no-fund
+
+echo '[setup] Checking Wrangler without authenticating or deploying'
+time env WRANGLER_SEND_METRICS=false ./node_modules/.bin/wrangler --version

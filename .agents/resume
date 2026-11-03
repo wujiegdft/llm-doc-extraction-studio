@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+
+# Dependencies are restored with the orb snapshot, not reinstalled on wake.
+# Local development needs no Cloudflare authentication or backing services.
+node -e 'if (Number(process.versions.node.split(".")[0]) < 22) process.exit(1)'
+test -x node_modules/.bin/wrangler
+echo '[resume] Node.js and Wrangler dependencies are ready'
