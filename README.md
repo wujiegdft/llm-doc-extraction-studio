@@ -4,7 +4,7 @@
 
 最终以纯 HTML / SVG / JavaScript 实现，通过可点击的流程图和实时拼装演示解释系统设计，部署到 Cloudflare Workers（Static Assets）。**本站不接入真实大模型，所有抽取结果均为模拟数据。**
 
-> 当前仅完成项目说明与目录规划，尚未实现页面。公司名及相关业务信息均已脱敏，示例文档、配置与结果均为模拟，不包含真实生产数据。
+> 当前已配置静态部署与“建设中”占位首页，讲解页面尚未实现。公司名及相关业务信息均已脱敏，示例文档、配置与结果均为模拟，不包含真实生产数据。
 
 ## 解决的问题
 
@@ -115,7 +115,7 @@ LLM 输出的是结构化 JSON **中间数据**。后续格式统一、单位换
 
 ## 目录规划
 
-以下为后续实现规划，**除 README.md 外均尚未创建**，可随页面实现调整。
+以下为页面目录规划，**目前仅实现 `public/index.html` 占位页与部署配置**，其余页面待后续实现。
 
 ```text
 .
@@ -132,3 +132,22 @@ LLM 输出的是结构化 JSON **中间数据**。后续格式统一、单位换
 │       └── data/              # 模拟字段配置、文档文本与 JSON 结果
 └── wrangler.jsonc             # Workers Static Assets 部署配置
 ```
+
+## 部署
+
+使用 Node.js 22 或更新的受支持版本，通过 Workers Static Assets 直接托管 `public/`，无需构建、Worker 脚本或大模型服务。
+
+```sh
+npm ci
+npm run dev
+```
+
+部署环境需预先注入 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit 权限），不要将令牌写入仓库。账户 ID 已在 `wrangler.jsonc` 的 `account_id` 中配置。
+
+```sh
+npm run deploy
+```
+
+Worker 名称为 `llm-doc-extraction-studio`，部署命令会输出 `*.workers.dev` 访问地址。若账户尚未启用 workers.dev 子域名，请先在 Cloudflare 控制台的 Workers & Pages 中启用，再重新部署；若提示认证或权限错误，请检查令牌是否覆盖配置的账户且具有 Workers Scripts Edit 权限。
+
+配置不包含 `routes` 或 `custom_domain`，不需要 DNS / Routes 权限。自定义域名 `extract.wujie1123.shop` 由用户稍后在 Cloudflare 控制台的该 Worker → Settings → Domains & Routes → Add → Custom Domain 手动绑定。

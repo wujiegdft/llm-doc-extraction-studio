@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "llm-doc-extraction-studio",
+  "account_id": "cbcb9be02f5c56f15463906657908eb9",
+  "compatibility_date": "2026-11-03",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public"
+  }
+}
