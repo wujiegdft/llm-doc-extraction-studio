@@ -3,46 +3,425 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="LLM 文档抽取平台，建设中。" />
-    <title>LLM 文档抽取平台</title>
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-        color: #172033;
-        background: #f7f8fa;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100svh;
-        display: grid;
-        place-items: center;
-      }
-
-      main {
-        padding: 32px 24px;
-        text-align: center;
-      }
-
-      h1 {
-        margin: 0 0 16px;
-        font-size: clamp(1.75rem, 5vw, 2.5rem);
-        line-height: 1.4;
-        letter-spacing: -0.03em;
-      }
-
-      p {
-        margin: 0;
-        color: #637083;
-        font-size: 1rem;
-      }
-    </style>
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="从开发排期到业务配置：交互讲解文档抽取链路与提示词拼装。纯静态模拟，不调用大模型。"
+    />
+    <title>配置驱动的文档抽取 · 讲解工作台</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
   </head>
   <body>
-    <main>
-      <h1>LLM 文档抽取平台</h1>
-      <p>建设中</p>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="topbar">
+      <a class="brand" href="#main"
+        ><span class="brand-icon" aria-hidden="true">▤</span> 文档抽取<span
+          class="brand-sub"
+        >
+          / 讲解工作台</span
+        ></a
+      >
+      <nav aria-label="章节导航">
+        <a href="#background">01 背景</a><a href="#pipeline">02 链路</a
+        ><a href="#playground">03 拼装演示</a><a href="#template">04 模板</a
+        ><a href="#iteration">05 迭代</a>
+      </nav>
+      <span class="version">V1 · 静态演示</span>
+    </header>
+    <main id="main">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">CONFIGURATION → PROMPT → STRUCTURED DATA</p>
+          <h1>
+            让业务知识，<br />直接成为抽取配置<span class="accent">。</span>
+          </h1>
+          <p class="lead">
+            从「开发写解析规则」到「业务定义字段」。<br />大模型只负责抽取，工程负责把整条链路连接起来。
+          </p>
+          <a class="primary" href="#playground"
+            >打开提示词拼装演示 <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <aside class="hero-note">
+          <span class="small-label">核心分工 / THE IDEA</span>
+          <div class="equation">
+            <span>业务知识</span><b>＋</b><span>工程约束</span><b>↓</b
+            ><strong>可配置的抽取任务</strong>
+          </div>
+          <p>
+            业务方描述「是什么、怎么找」<br />系统负责「怎么组装、怎么落库」
+          </p>
+        </aside>
+        <p class="disclaimer">
+          <span class="status-dot"></span> 全站脱敏、模拟数据 · 不调用模型 ·
+          不执行真实入库 · 无真实公司信息
+        </p>
+      </div>
+
+      <section id="background" aria-labelledby="background-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / BACKGROUND</p>
+            <h2 id="background-title">改变的不是解析入口，是协作方式</h2>
+          </div>
+          <p>把业务知识从开发排期中解耦</p>
+        </div>
+        <div class="comparison">
+          <article class="panel">
+            <span class="small-label">BEFORE / 排期开发模式</span>
+            <h3>每一次变化，都回到开发队列</h3>
+            <p class="steps">
+              生产 / 产品提需求 → 开发排期 → 写规则 → 补边界情况
+            </p>
+            <dl>
+              <dt>角色</dt>
+              <dd>业务解释需求，开发理解业务并编写解析代码。</dd>
+              <dt>瓶颈</dt>
+              <dd>
+                字段变化、文档差异、边界情况（edge
+                case）反复占用开发与回归资源。
+              </dd>
+            </dl>
+          </article>
+          <article class="panel after">
+            <span class="small-label">AFTER / 配置驱动模式</span>
+            <h3>懂业务的人，直接定义要什么</h3>
+            <p class="steps">
+              选择字段 → 描述含义与取法 → 系统拼装 → 逐层解析入库
+            </p>
+            <dl>
+              <dt>角色</dt>
+              <dd>
+                内部生产同事维护业务配置；工程方维护模板、链路与转换规则。
+              </dd>
+              <dt>边界</dt>
+              <dd>
+                不写代码、不填样例、不手写完整提示词；复杂情况仍需配置与工程共同迭代。
+              </dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section id="pipeline" aria-labelledby="pipeline-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / PIPELINE</p>
+            <h2 id="pipeline-title">六个环节，只有一处用大模型</h2>
+          </div>
+          <p>点击节点，查看职责与输入输出</p>
+        </div>
+        <div class="pipeline-layout panel">
+          <div class="flow-wrap">
+            <svg
+              id="flow"
+              viewBox="0 0 760 330"
+              role="group"
+              aria-label="文档抽取流程，六个可交互节点"
+            >
+              <defs>
+                <marker
+                  id="arrow"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="7"
+                  refY="4"
+                  orient="auto"
+                >
+                  <path d="M0 0 L8 4 L0 8" fill="currentColor" />
+                </marker>
+              </defs>
+              <g
+                class="connections"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                marker-end="url(#arrow)"
+              >
+                <path d="M208 95 H277" />
+                <path d="M453 95 H522" />
+                <path d="M610 130 V192" />
+                <path d="M522 227 H453" />
+                <path d="M277 227 H208" />
+              </g>
+              <g class="flow-pulses" fill="none" stroke-width="3">
+                <path d="M208 95 H267" />
+                <path d="M453 95 H512" />
+                <path d="M610 130 V182" />
+                <path d="M512 227 H463" />
+                <path d="M267 227 H218" />
+              </g>
+              <text x="365" y="24" text-anchor="middle" class="flow-caption">
+                字段配置 + 文档文本 → 提示词
+              </text>
+              <g
+                class="flow-node"
+                data-node="pdf"
+                role="button"
+                tabindex="0"
+                aria-label="PDF 文件"
+                aria-pressed="false"
+                transform="translate(32 60)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">01 / INPUT</text>
+                <text x="16" y="49">PDF 文件</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="text"
+                role="button"
+                tabindex="0"
+                aria-label="前置程序转文本"
+                aria-pressed="false"
+                transform="translate(277 60)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">02 / ENGINEERING</text>
+                <text x="16" y="49">前置程序转文本</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="assembly"
+                role="button"
+                tabindex="0"
+                aria-label="提示词拼装器"
+                aria-pressed="true"
+                transform="translate(522 60)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">03 / ENGINEERING</text>
+                <text x="16" y="49">提示词拼装器</text>
+              </g>
+              <g
+                class="flow-node llm"
+                data-node="llm"
+                role="button"
+                tabindex="0"
+                aria-label="LLM 抽取，唯一大模型环节"
+                aria-pressed="false"
+                transform="translate(522 192)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">04 / ONLY LLM</text>
+                <text x="16" y="49">LLM → JSON 中间数据</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="rules"
+                role="button"
+                tabindex="0"
+                aria-label="按字段规则转换"
+                aria-pressed="false"
+                transform="translate(277 192)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">05 / ENGINEERING</text>
+                <text x="16" y="49">按字段规则转换</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="database"
+                role="button"
+                tabindex="0"
+                aria-label="入库"
+                aria-pressed="false"
+                transform="translate(32 192)"
+              >
+                <rect width="176" height="70" rx="10" />
+                <text x="16" y="23" class="node-number">06 / STORAGE</text>
+                <text x="16" y="49">入库</text>
+              </g>
+              <text x="365" y="308" text-anchor="middle" class="flow-caption">
+                其余环节均为普通工程能力，而非大模型能力
+              </text>
+            </svg>
+          </div>
+          <aside
+            id="node-detail"
+            class="node-detail"
+            aria-live="polite"
+          ></aside>
+        </div>
+        <p class="section-note">
+          说明：实际流程比此更复杂，后续补充。这里聚焦职责边界，不展开解析、校验、异常处理等细节。窄屏可左右滑动流程图。
+        </p>
+      </section>
+
+      <section id="playground" aria-labelledby="playground-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">03 / LIVE PROMPT ASSEMBLY</p>
+            <h2 id="playground-title">改一条字段配置，看提示词如何变化</h2>
+          </div>
+          <button id="reset" type="button" class="secondary">重置演示</button>
+        </div>
+        <p class="section-intro">
+          业务同事只需选字段、写含义与取值方向，<strong>不填写样例</strong>。下方提示词实时拼装；JSON
+          仅用预置样本演示数据形态。
+        </p>
+        <div class="workspace">
+          <article class="editor panel">
+            <div class="panel-heading">
+              <h3><span>01</span> 业务字段配置</h3>
+              <span class="tag">可编辑</span>
+            </div>
+            <p class="hint">勾选需要的字段；名称须唯一且非空。</p>
+            <div id="fields"></div>
+            <button type="button" id="add-field" class="secondary full">
+              ＋ 添加字段
+            </button>
+          </article>
+          <article class="document panel">
+            <div class="panel-heading">
+              <h3><span>02</span> PDF 转出的文本</h3>
+              <span class="tag">模拟文档</span>
+            </div>
+            <p class="hint">前置程序产物，不是大模型生成。</p>
+            <label class="sr-only" for="document-text">模拟 PDF 文本</label
+            ><textarea id="document-text" spellcheck="false"></textarea>
+            <p class="hint">
+              可编辑以观察提示词变化。更改文档后模拟值统一为
+              null，不运行语义抽取。
+            </p>
+          </article>
+          <article class="prompt panel">
+            <div class="panel-heading">
+              <h3><span>03</span> 系统拼出的完整提示词</h3>
+              <span class="tag blue">实时</span>
+            </div>
+            <p class="hint">System 固定部分 + 动态字段定义 + 文档内容</p>
+            <pre
+              id="assembled-prompt"
+              tabindex="0"
+              aria-label="实时拼装的完整提示词"
+            ></pre>
+          </article>
+        </div>
+        <p id="demo-status" class="demo-status" role="status"></p>
+        <div class="results">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>LLM JSON 中间数据</h3>
+              <span class="tag">模拟 · 非模型输出</span>
+            </div>
+            <pre
+              id="raw-result"
+              tabindex="0"
+              aria-label="模拟 JSON 中间数据"
+            ></pre>
+          </article>
+          <div class="result-arrow" aria-hidden="true">→</div>
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>规则转换后</h3>
+              <span class="tag">确定性工程规则</span>
+            </div>
+            <pre
+              id="converted-result"
+              tabindex="0"
+              aria-label="规则转换后的结果"
+            ></pre>
+          </article>
+        </div>
+        <p class="section-note">
+          演示规则：发生日期统一为
+          YYYY-MM-DD；金额由「万元」换算为「元」的数值；主体名称保留原文；缺失值保留
+          null。枚举映射可在规则层扩展。
+        </p>
+      </section>
+
+      <section id="template" aria-labelledby="template-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">04 / TEMPLATE & BOUNDARIES</p>
+            <h2 id="template-title">固定约束，动态注入业务知识</h2>
+          </div>
+          <p>模板独立维护，字段定义按配置生成</p>
+        </div>
+        <div class="template-layout">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>完整提示词模板</h3>
+              <span class="tag">{{占位符}}</span>
+            </div>
+            <pre
+              id="prompt-template"
+              tabindex="0"
+              aria-label="完整提示词模板"
+            ></pre>
+          </article>
+          <div class="principles">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>固定与动态分离</h3>
+                <p>
+                  System
+                  由工程方维护；字段含义、取值方向与文档在运行时注入。改字段，不改模板。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>用 null 约束缺失信息</h3>
+                <p>
+                  找不到就留空值，抑制编造；这是约束目标，不是可靠性保证，仍需下游校验。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>固定 JSON，确定性转换</h3>
+                <p>
+                  只输出配置字段组成的 JSON
+                  对象，方便后续做格式、单位和枚举映射。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>04</span>
+              <div>
+                <h3>领域知识来自业务方</h3>
+                <p>
+                  懂业务的人描述「是什么、怎么找」，工程方负责拼装与处理链路，不让业务同事学习提示词工程。
+                </p>
+              </div>
+            </article>
+            <p class="section-note">
+              文档与字段说明均为数据，不得覆盖 System
+              规则。真实系统还需结构校验与异常处理，提示词分隔本身不能保证防住提示注入。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="iteration" aria-labelledby="iteration-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">05 / RESULTS & ITERATION</p>
+            <h2 id="iteration-title">效果与迭代</h2>
+          </div>
+          <span class="tag">待补充</span>
+        </div>
+        <div class="placeholder">
+          <span aria-hidden="true">＋</span>
+          <div>
+            <h3>为下一轮讲解留白</h3>
+            <p>
+              后续补充真实评估口径、脱敏案例与边界情况的迭代过程。当前不展示未经验证的准确率或收益数字。
+            </p>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <span>文档抽取 / 讲解工作台</span
+        ><span>纯静态 HTML · SVG · JavaScript / V1</span
+        ><a href="#main">回到顶部 ↑</a>
+      </footer>
     </main>
   </body>
 </html>
