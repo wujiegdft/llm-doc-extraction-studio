@@ -22,9 +22,12 @@ import {
   frontierRef,
   evalVersions,
   metricNotes,
+  validateFields,
+  badOutputs,
   nodes,
 } from "./data.js";
 import { estimate, price, verdict } from "./tiers.js";
+import { runWithRetry, schemaFrom } from "./validate.js";
 import {
   assembleChunkPrompt,
   assembleCoarsePrompt,
@@ -773,6 +776,45 @@ document.querySelectorAll('input[name="eval-version"]').forEach((radio) =>
   }),
 );
 
+// ———— 07 输出校验与容错（模拟） ————
+const badSelect = $("#bad-output");
+for (const item of badOutputs)
+  badSelect.append(new Option(item.label, item.id));
+function renderValidation() {
+  const item = badOutputs.find((x) => x.id === badSelect.value);
+  const run = runWithRetry(item.raws, schemaFrom(validateFields));
+  const list = $("#validation-attempts");
+  list.replaceChildren();
+  item.raws.forEach((raw, i) => {
+    const li = document.createElement("li");
+    const step = run.log[i];
+    const head = document.createElement("span");
+    head.className = "small-label";
+    head.textContent =
+      `第 ${i + 1} 次调用` + (i ? "（带上一次的错误信息）" : "");
+    const pre = document.createElement("pre");
+    pre.textContent = raw;
+    const verdictEl = document.createElement("p");
+    verdictEl.className = step ? (step.result.ok ? "pass" : "fail") : "hint";
+    verdictEl.textContent = !step
+      ? "未调用（前面已通过）"
+      : step.result.ok
+        ? "校验通过" +
+          (step.result.steps.length ? `：${step.result.steps.join("；")}` : "")
+        : `${step.result.stage}失败：${step.result.error}`;
+    li.append(head, pre, verdictEl);
+    list.append(li);
+  });
+  text(
+    "#validation-result",
+    run.status === "ok"
+      ? JSON.stringify(run.value, null, 2)
+      : "该条记录标记为失败 → 进入人工处理 / 告警\n（不写入数据库）",
+  );
+  text("#validation-note", `${item.note}（模拟示意）`);
+}
+badSelect.addEventListener("change", renderValidation);
+
 // ———— 02 流程图 ————
 function selectNode(node) {
   document
@@ -834,4 +876,5 @@ renderFunnel();
 renderTiers();
 renderBadges();
 renderEval();
+renderValidation();
 selectNode("assembly");

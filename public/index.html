@@ -26,8 +26,9 @@
         <a href="#background">背景</a><a href="#pipeline">链路</a
         ><a href="#playground">拼装</a><a href="#funnel">漏斗</a
         ><a href="#chunking">分块</a><a href="#template">模板</a
-        ><a href="#workflow">Workflow</a><a href="#tiers">档位</a
-        ><a href="#evaluation">验证</a><a href="#optimize">可优化</a>
+        ><a href="#validation">校验</a><a href="#workflow">Workflow</a
+        ><a href="#tiers">档位</a><a href="#evaluation">验证</a
+        ><a href="#optimize">可优化</a>
       </nav>
       <span class="version">V1 · 静态演示</span>
     </header>
@@ -118,9 +119,9 @@
           <div class="flow-wrap">
             <svg
               id="flow"
-              viewBox="0 0 1080 545"
+              viewBox="-80 0 1160 585"
               role="group"
-              aria-label="文档抽取流程：内容类型分流，表格分支的三阶段定位漏斗，预算判断，短文档一次抽取与长文档分块迭代回路，共十八个可交互节点"
+              aria-label="文档抽取流程：内容类型分流，表格分支的三阶段定位漏斗，预算判断，短文档一次抽取与长文档分块迭代回路，共二十个可交互节点，含输出校验、重试回路与失败处理"
             >
               <defs>
                 <marker
@@ -136,9 +137,9 @@
               </defs>
               <rect
                 class="loop-box"
-                x="322"
+                x="205"
                 y="290"
-                width="362"
+                width="500"
                 height="215"
                 rx="14"
               />
@@ -153,7 +154,7 @@
               <text x="515" y="104" class="flow-caption">
                 表格多时的定位漏斗：粗筛 → 精选 → 精抽（代码编排）
               </text>
-              <text x="503" y="497" text-anchor="middle" class="flow-caption">
+              <text x="455" y="497" text-anchor="middle" class="flow-caption">
                 迭代回路：长文档循环，短文档只走一次（代码控制）
               </text>
               <g
@@ -174,15 +175,18 @@
                 <path d="M1015 82 V190 H900" />
                 <path d="M660 230 H690 V190 H720" />
                 <path d="M810 220 V305" />
-                <path d="M720 335 H670" />
-                <path d="M810 365 V420" />
-                <path d="M720 450 H670" />
-                <path d="M595 420 V365" />
-                <path d="M520 335 H485" />
-                <path d="M410 365 V420" />
-                <path d="M485 450 H520" />
-                <path d="M335 335 H300" />
-                <path d="M150 335 H120" />
+                <path d="M720 335 H690" />
+                <path d="M560 335 H515" />
+                <path d="M385 335 H345" />
+                <path d="M215 335 H190" />
+                <path d="M90 335 H40" />
+                <path d="M450 305 V275 H625 V305" />
+                <path d="M450 365 V392" />
+                <path d="M820 365 V420" />
+                <path d="M740 450 H690" />
+                <path d="M625 420 V365" />
+                <path d="M280 365 V420" />
+                <path d="M345 450 H560" />
               </g>
               <g class="flow-pulses" fill="none" stroke-width="3">
                 <path d="M140 190 H170" />
@@ -195,25 +199,21 @@
                 <path d="M1015 82 V190 H900" />
                 <path d="M660 230 H690 V190 H720" />
                 <path d="M810 220 V305" />
-                <path d="M720 335 H670" />
-                <path d="M810 365 V420" />
-                <path d="M720 450 H670" />
-                <path d="M595 420 V365" />
-                <path d="M520 335 H485" />
-                <path d="M410 365 V420" />
-                <path d="M485 450 H520" />
-                <path d="M335 335 H300" />
-                <path d="M150 335 H120" />
+                <path d="M820 365 V420" />
+                <path d="M740 450 H690" />
+                <path d="M625 420 V365" />
+                <path d="M280 365 V420" />
+                <path d="M345 450 H560" />
               </g>
               <text x="810" y="152" text-anchor="middle" class="flow-caption">
                 字段配置
               </text>
-              <text x="695" y="326" text-anchor="middle" class="flow-caption">
+              <text x="712" y="322" text-anchor="start" class="flow-caption">
                 短文档
               </text>
-              <text x="822" y="398" class="flow-caption">长文档</text>
-              <text x="317" y="326" text-anchor="middle" class="flow-caption">
-                完成
+              <text x="832" y="398" class="flow-caption">长文档</text>
+              <text x="60" y="322" text-anchor="middle" class="flow-caption">
+                通过
               </text>
               <g
                 class="flow-node"
@@ -359,67 +359,15 @@
                 <text x="14" y="45">预算判断：≤100K？</text>
               </g>
               <g
-                class="flow-node llm"
-                data-node="llm"
-                role="button"
-                tabindex="0"
-                aria-label="LLM 抽取，大模型环节"
-                aria-pressed="false"
-                transform="translate(520 305)"
-              >
-                <rect width="150" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">07 / 调用</text>
-                <text x="14" y="45">LLM 抽取</text>
-              </g>
-              <g
-                class="flow-node"
-                data-node="merge"
-                role="button"
-                tabindex="0"
-                aria-label="代码合并"
-                aria-pressed="false"
-                transform="translate(335 305)"
-              >
-                <rect width="150" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">08 / CODE</text>
-                <text x="14" y="45">代码合并</text>
-              </g>
-              <g
-                class="flow-node"
-                data-node="rules"
-                role="button"
-                tabindex="0"
-                aria-label="按字段规则转换"
-                aria-pressed="false"
-                transform="translate(150 305)"
-              >
-                <rect width="150" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">09 / ENGINEERING</text>
-                <text x="14" y="45">按字段规则转换</text>
-              </g>
-              <g
-                class="flow-node"
-                data-node="database"
-                role="button"
-                tabindex="0"
-                aria-label="入库"
-                aria-pressed="false"
-                transform="translate(20 305)"
-              >
-                <rect width="100" height="60" rx="10" />
-                <text x="14" y="22" class="node-number">10 / STORAGE</text>
-                <text x="14" y="45">入库</text>
-              </g>
-              <g
                 class="flow-node"
                 data-node="splitter"
                 role="button"
                 tabindex="0"
                 aria-label="长文档按段落分块"
                 aria-pressed="false"
-                transform="translate(720 420)"
+                transform="translate(740 420)"
               >
-                <rect width="180" height="60" rx="10" />
+                <rect width="160" height="60" rx="10" />
                 <text x="14" y="22" class="node-number">LOOP-A / CODE</text>
                 <text x="14" y="45">按段落分块</text>
               </g>
@@ -430,9 +378,9 @@
                 tabindex="0"
                 aria-label="拼本块提示词"
                 aria-pressed="false"
-                transform="translate(520 420)"
+                transform="translate(560 420)"
               >
-                <rect width="150" height="60" rx="10" />
+                <rect width="130" height="60" rx="10" />
                 <text x="14" y="22" class="node-number">LOOP-B / CODE</text>
                 <text x="14" y="45">拼本块提示词</text>
               </g>
@@ -443,13 +391,97 @@
                 tabindex="0"
                 aria-label="更新待抽字段"
                 aria-pressed="false"
-                transform="translate(335 420)"
+                transform="translate(215 420)"
               >
-                <rect width="150" height="60" rx="10" />
+                <rect width="130" height="60" rx="10" />
                 <text x="14" y="22" class="node-number">LOOP-C / CODE</text>
                 <text x="14" y="45">更新待抽字段</text>
               </g>
-              <text x="540" y="537" text-anchor="middle" class="flow-caption">
+              <g
+                class="flow-node llm"
+                data-node="llm"
+                role="button"
+                tabindex="0"
+                aria-label="LLM 抽取，大模型环节"
+                aria-pressed="false"
+                transform="translate(560 305)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">07 / 调用</text>
+                <text x="14" y="45">LLM 抽取</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="validate"
+                role="button"
+                tabindex="0"
+                aria-label="输出校验"
+                aria-pressed="false"
+                transform="translate(385 305)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">08 / CODE</text>
+                <text x="14" y="45">输出校验</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="merge"
+                role="button"
+                tabindex="0"
+                aria-label="代码合并"
+                aria-pressed="false"
+                transform="translate(215 305)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">09 / CODE</text>
+                <text x="14" y="45">代码合并</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="rules"
+                role="button"
+                tabindex="0"
+                aria-label="按字段规则转换"
+                aria-pressed="false"
+                transform="translate(90 305)"
+              >
+                <rect width="100" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">10 / ENGINEERING</text>
+                <text x="14" y="45">规则转换</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="database"
+                role="button"
+                tabindex="0"
+                aria-label="入库"
+                aria-pressed="false"
+                transform="translate(-60 305)"
+              >
+                <rect width="100" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">11 / STORAGE</text>
+                <text x="14" y="45">入库</text>
+              </g>
+              <text x="545" y="268" text-anchor="middle" class="flow-caption">
+                校验失败：带错误信息重试（限次）
+              </text>
+              <text x="458" y="406" class="flow-caption">
+                仍失败：标记失败 / 人工处理
+              </text>
+              <g
+                class="flow-node fail-node"
+                data-node="failed"
+                role="button"
+                tabindex="0"
+                aria-label="失败处理：标记失败、人工处理或告警，不写入脏数据"
+                aria-pressed="false"
+                transform="translate(385 420)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">FAIL / CODE</text>
+                <text x="14" y="45">标记失败·告警</text>
+              </g>
+              <text x="500" y="577" text-anchor="middle" class="flow-caption">
                 流程由代码编排；调用模型的节点标注档位（高配 / 轻量，可配置）
               </text>
             </svg>
@@ -461,7 +493,7 @@
           ></aside>
         </div>
         <p class="section-note">
-          说明：实际流程比此更复杂，后续补充。这里聚焦职责边界，不展开解析、校验、异常处理等细节。窄屏可左右滑动流程图。预算与分块策略均为示意，可配置。
+          说明：实际流程比此更复杂，后续补充。这里聚焦职责边界，不展开解析等细节；输出校验见“输出校验与容错”。窄屏可左右滑动流程图。预算与分块策略均为示意，可配置。
         </p>
       </section>
 
@@ -968,10 +1000,108 @@
         </div>
       </section>
 
+      <section id="validation" aria-labelledby="validation-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">07 / OUTPUT VALIDATION</p>
+            <h2 id="validation-title">输出校验与容错</h2>
+          </div>
+          <span class="tag">演示为模拟示意</span>
+        </div>
+        <p class="section-intro">
+          早期模型输出偶有 JSON
+          不合法，系统对输出做了校验和失败处理。校验在代码控制的 workflow
+          里，是确定性的，不依赖模型。系统原本是 Java 实现的。
+        </p>
+        <div class="panel practice">
+          <div class="panel-heading">
+            <h3>业界通用做法</h3>
+            <span class="tag warn">通用做法介绍，不是当时的具体实现</span>
+          </div>
+          <p class="hint">
+            以下是行业里常见的三层思路。当时具体用了哪种实现、哪个框架，这里不作声明。
+          </p>
+          <ol class="layers">
+            <li>
+              <h4>1. 从源头约束</h4>
+              <ul>
+                <li>
+                  <strong>JSON mode / Structured Outputs</strong
+                  >：受约束解码，传入 JSON Schema，由推理端保证输出结构。
+                </li>
+                <li><strong>函数调用</strong>的参数 schema。</li>
+                <li><strong>提示词</strong>里明确格式，并加 few-shot 样例。</li>
+              </ul>
+              <p>早期模型往往不支持前两者，所以必须靠后两层兜底。</p>
+            </li>
+            <li>
+              <h4>2. 输出后校验与修复</h4>
+              <ul>
+                <li>
+                  <strong>语法层</strong>：标准 JSON 解析，加轻量修复（去
+                  markdown 代码块、多余前后文字、尾逗号、引号）；常见的是
+                  json-repair 一类做法。
+                </li>
+                <li>
+                  <strong>结构层</strong>：对照 JSON Schema
+                  或类型模型校验字段名、类型、必填、枚举。Python 常用
+                  Pydantic，TypeScript 常用 Zod，Java 常用 Jackson 配 JSON
+                  Schema 校验库。
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>3. 失败后的容错</h4>
+              <ul>
+                <li>带错误信息让模型重试，限制次数（Instructor 类做法）。</li>
+                <li>
+                  仍失败则降级、标记失败、人工处理或告警，<strong>不写脏数据</strong>。
+                </li>
+                <li>监控非法输出率，作为质量指标，并纳入验证集回归。</li>
+              </ul>
+            </li>
+          </ol>
+          <p class="hint">
+            上述库与工具均为通用做法举例，不表示本系统使用了其中任何一个。
+          </p>
+        </div>
+        <div class="chain-controls">
+          <label class="select-label">
+            模拟的模型输出
+            <select
+              id="bad-output"
+              aria-label="选择一种模拟的不合法输出"
+            ></select>
+          </label>
+          <p class="hint">最大重试 2 次（共最多 3 次调用）。</p>
+        </div>
+        <div class="chain-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>每次调用的原始返回</h3>
+              <span class="tag">模拟 · 非模型输出</span>
+            </div>
+            <ol id="validation-attempts" class="attempts"></ol>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>校验结果</h3>
+              <span class="tag blue">确定性代码</span>
+            </div>
+            <pre
+              id="validation-result"
+              tabindex="0"
+              aria-label="校验结果"
+            ></pre>
+            <p id="validation-note" class="hint" role="status"></p>
+          </article>
+        </div>
+      </section>
+
       <section id="workflow" aria-labelledby="workflow-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">07 / WORKFLOW vs AGENT</p>
+            <p class="eyebrow">08 / WORKFLOW vs AGENT</p>
             <h2 id="workflow-title">workflow 与 agent 的取舍</h2>
           </div>
           <p>本系统是代码编排的 LLM workflow，不是自治 agent</p>
@@ -1024,7 +1154,7 @@
       <section id="tiers" aria-labelledby="tiers-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">08 / MODEL TIERS</p>
+            <p class="eyebrow">09 / MODEL TIERS</p>
             <h2 id="tiers-title">模型高低搭配：按环节选档</h2>
           </div>
           <span class="tag">成本与耗时为模拟示意</span>
@@ -1087,7 +1217,7 @@
       <section id="evaluation" aria-labelledby="evaluation-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">09 / PROMPT EVALUATION</p>
+            <p class="eyebrow">10 / PROMPT EVALUATION</p>
             <h2 id="evaluation-title">
               提示词验证：用数据集回归，而不是凭感觉
             </h2>
@@ -1277,7 +1407,7 @@
       <section id="optimize" aria-labelledby="optimize-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">10 / FUTURE OPTIMIZATIONS</p>
+            <p class="eyebrow">11 / FUTURE OPTIMIZATIONS</p>
             <h2 id="optimize-title">后续可优化方向</h2>
           </div>
           <span class="tag warn">当时没有做 / 可优化，非已实现</span>

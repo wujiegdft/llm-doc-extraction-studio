@@ -186,3 +186,58 @@ test("版本对比：v1 不达标、v3 全字段达到下限；全文不含具�
     ),
   );
 });
+
+import {
+  validateOutput,
+  runWithRetry,
+  schemaFrom,
+} from "../public/validate.js";
+import { badOutputs, validateFields } from "../public/data.js";
+
+const schema = schemaFrom(validateFields);
+
+test("语法层轻量修复：代码块、前后文字、尾逗号；缺引号不修复；字符串内的括号不被误截", () => {
+  const ok = (raw) => validateOutput(raw, schema);
+  assert.equal(ok('```json\n{"金额":1}\n```').ok, true);
+  assert.equal(ok('结果：{"金额":1,}。').ok, true);
+  assert.equal(ok('{"金额":1,"主体名称":"甲}乙"}').value["主体名称"], "甲}乙");
+  const bad = ok("{金额:1}");
+  assert.equal(bad.ok, false);
+  assert.equal(bad.stage, "语法层");
+});
+
+test("结构层：类型错误与枚举外失败；多余字段丢弃、缺失补 null；数组/对象不混用", () => {
+  const typed = validateOutput('{"金额":"12.50万元"}', schema);
+  assert.equal(typed.ok, false);
+  assert.equal(typed.stage, "结构层");
+  assert.equal(
+    validateOutput('{"金额":1,"结算状态":"其他"}', schema).ok,
+    false,
+  );
+  const loose = validateOutput('{"金额":1,"备注":"x"}', schema);
+  assert.deepEqual(loose.value, { 金额: 1, 主体名称: null, 结算状态: null });
+  assert.equal(validateOutput('[{"金额":1}]', schema).ok, false);
+  assert.equal(validateOutput('{"金额":1}', schema, { array: true }).ok, false);
+});
+
+test("重试限次：第 2 次合法则成功；超过 3 次调用仍失败则标记失败且不产出数据", () => {
+  const retried = runWithRetry(["{金额:1}", '{"金额":1}'], schema);
+  assert.equal(retried.status, "ok");
+  assert.equal(retried.log.length, 2);
+  const failed = runWithRetry(["x", "y", "z", '{"金额":1}'], schema);
+  assert.equal(failed.status, "failed");
+  assert.equal(failed.value, null);
+  assert.equal(failed.log.length, 3);
+});
+
+test("演示用的五种不合法输出，结果与页面说明一致", () => {
+  const status = Object.fromEntries(
+    badOutputs.map((item) => [item.id, runWithRetry(item.raws, schema)]),
+  );
+  assert.equal(status.fence.status, "ok");
+  assert.equal(status.fence.log.length, 1);
+  assert.equal(status.quote.log.length, 2);
+  assert.equal(status.type.log.length, 2);
+  assert.equal(status.extra.value["主体名称"], null);
+  assert.equal(status.giveup.status, "failed");
+});

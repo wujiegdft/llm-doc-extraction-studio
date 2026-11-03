@@ -961,6 +961,79 @@ dl.wide {
   font-size: 11px;
   color: var(--muted);
 }
+.practice {
+  margin-bottom: 18px;
+}
+.layers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.layers > li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--code);
+}
+.layers h4 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.layers ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+.layers li li {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+.layers li li strong {
+  color: var(--ink);
+}
+.layers p {
+  font-size: 12px;
+  color: var(--danger);
+  margin: 8px 0 0;
+}
+.select-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.select-label select {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.attempts {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.attempts pre {
+  margin: 6px 0;
+  font-size: 12px;
+}
+.attempts p {
+  margin: 0;
+  font-size: 12px;
+}
+.fail-node rect {
+  stroke: var(--danger);
+  stroke-dasharray: 4 3;
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1046,6 +1119,9 @@ dl.wide {
   }
 }
 @media (max-width: 1100px) {
+  .layers {
+    grid-template-columns: 1fr;
+  }
   nav {
     overflow-x: auto;
   }
