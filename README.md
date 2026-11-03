@@ -148,6 +148,8 @@ npm run dev
 npm run deploy
 ```
 
+已部署的占位首页：<https://llm-doc-extraction-studio.wujiegdft.workers.dev/>。
+
 Worker 名称为 `llm-doc-extraction-studio`，部署命令会输出 `*.workers.dev` 访问地址。若账户尚未启用 workers.dev 子域名，请先在 Cloudflare 控制台的 Workers & Pages 中启用，再重新部署；若提示认证或权限错误，请检查令牌是否覆盖配置的账户且具有 Workers Scripts Edit 权限。
 
 配置不包含 `routes` 或 `custom_domain`，不需要 DNS / Routes 权限。自定义域名 `extract.wujie1123.shop` 由用户稍后在 Cloudflare 控制台的该 Worker → Settings → Domains & Routes → Add → Custom Domain 手动绑定。
