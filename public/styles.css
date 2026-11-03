@@ -584,26 +584,6 @@ pre {
   margin-top: 18px;
   font-size: 12px;
 }
-.placeholder {
-  border: 1px dashed var(--line);
-  border-radius: 8px;
-  padding: 30px;
-  display: flex;
-  gap: 24px;
-  align-items: center;
-}
-.placeholder > span {
-  color: var(--muted);
-  font-size: 30px;
-}
-.placeholder h3 {
-  margin: 0 0 7px;
-}
-.placeholder p {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0;
-}
 footer {
   display: flex;
   gap: 24px;
@@ -885,24 +865,18 @@ dl.wide {
 .tier-summary {
   margin-bottom: 8px;
 }
-.dataset-grid,
-.iter-grid {
+.dataset-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-bottom: 18px;
 }
-.iter-grid {
-  grid-template-columns: repeat(2, 1fr);
-}
-.dataset-grid p,
-.iter-grid p {
+.dataset-grid p {
   font-size: 13px;
   color: var(--muted);
   margin: 0;
 }
-.dataset-grid h3,
-.iter-grid h3 {
+.dataset-grid h3 {
   font-size: 16px;
 }
 .loop-panel {
@@ -1076,7 +1050,6 @@ dl.wide {
     overflow-x: auto;
   }
   .dataset-grid,
-  .iter-grid,
   .metric-grid {
     grid-template-columns: 1fr;
   }
@@ -1209,10 +1182,6 @@ dl.wide {
   }
   .template-layout {
     gap: 24px;
-  }
-  .placeholder {
-    padding: 20px;
-    gap: 14px;
   }
   footer {
     flex-wrap: wrap;
