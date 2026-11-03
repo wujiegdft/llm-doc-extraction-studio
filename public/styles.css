@@ -613,6 +613,211 @@ footer {
   font-size: 11px;
   color: var(--muted);
 }
+.loop-box {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-dasharray: 6 5;
+  opacity: 0.55;
+}
+.mode-switch {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin: 0 0 14px;
+  width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.mode-switch legend {
+  padding: 0 6px;
+}
+.mode-switch label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.mode-switch input {
+  accent-color: var(--accent);
+}
+.plain {
+  font-size: inherit !important;
+  color: inherit !important;
+  margin: 0 !important;
+}
+.panel-heading.spaced {
+  margin-top: 22px;
+}
+.chain-controls {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.chain-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.budget {
+  margin-bottom: 8px;
+}
+.budget-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 14px;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.meter {
+  position: relative;
+  height: 12px;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: visible;
+}
+.meter i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+  border-radius: 6px;
+  transition: width 0.4s;
+  opacity: 0.8;
+}
+.meter .mark {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 0;
+  border-left: 2px solid var(--ink);
+}
+.meter .mark.cap {
+  border-left: 2px dashed var(--danger);
+}
+.scale {
+  margin: 0 0 12px;
+}
+.chunk-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.chunk-list li {
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+}
+.chunk-list li.current {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--tint);
+}
+.chunk-list li.skipped {
+  border-style: dashed;
+}
+.chain-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.chain-side {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+#chain-prompt {
+  min-height: 420px;
+  max-height: 560px;
+  overflow: auto;
+}
+.chain-side pre {
+  min-height: 90px;
+  color: var(--accent);
+  font-size: 12px;
+}
+dl.wide {
+  grid-template-columns: 62px 1fr;
+}
+.funnel-box {
+  stroke-dasharray: 2 4;
+  opacity: 0.45;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.toggle input {
+  accent-color: var(--accent);
+}
+.plain-h {
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+.size-row {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 14px;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.meter.over i {
+  background: var(--danger);
+}
+.chunk-list li.done {
+  color: var(--ink);
+}
+#funnel-prompt {
+  min-height: 420px;
+  max-height: 560px;
+  overflow: auto;
+}
+.tag.warn {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.optimize-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 22px;
+}
+.optimize-list li {
+  padding-left: 6px;
+  color: var(--accent);
+}
+.optimize-list h3 {
+  color: var(--ink);
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+.optimize-list p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -697,7 +902,26 @@ footer {
     max-width: 180px;
   }
 }
+@media (max-width: 1100px) {
+  .size-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .chain-grid {
+    grid-template-columns: 1fr;
+  }
+  .budget-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
 @media (max-width: 650px) {
+  .flow-wrap svg {
+    min-width: 900px;
+  }
+  nav {
+    gap: 16px;
+  }
   html {
     scroll-padding-top: 114px;
   }
@@ -778,9 +1002,6 @@ footer {
   .flow-wrap {
     overflow-x: auto;
     padding: 10px;
-  }
-  .flow-wrap svg {
-    min-width: 650px;
   }
   .node-detail {
     padding: 20px;

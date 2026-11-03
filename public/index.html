@@ -24,8 +24,10 @@
       >
       <nav aria-label="章节导航">
         <a href="#background">01 背景</a><a href="#pipeline">02 链路</a
-        ><a href="#playground">03 拼装演示</a><a href="#template">04 模板</a
-        ><a href="#iteration">05 迭代</a>
+        ><a href="#playground">03 拼装</a><a href="#funnel">04 表格漏斗</a
+        ><a href="#chunking">05 分块</a><a href="#template">06 模板</a
+        ><a href="#workflow">07 Workflow</a><a href="#optimize">08 可优化</a
+        ><a href="#iteration">09 迭代</a>
       </nav>
       <span class="version">V1 · 静态演示</span>
     </header>
@@ -108,17 +110,17 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">02 / PIPELINE</p>
-            <h2 id="pipeline-title">六个环节，只有一处用大模型</h2>
+            <h2 id="pipeline-title">流程全由代码编排，大模型只做判断与抽取</h2>
           </div>
-          <p>点击节点，查看职责与输入输出</p>
+          <p>点击节点，查看职责与输入输出；虚线框是迭代回路</p>
         </div>
         <div class="pipeline-layout panel">
           <div class="flow-wrap">
             <svg
               id="flow"
-              viewBox="0 0 760 330"
+              viewBox="0 0 1080 545"
               role="group"
-              aria-label="文档抽取流程，六个可交互节点"
+              aria-label="文档抽取流程：内容类型分流，表格分支的三阶段定位漏斗，预算判断，短文档一次抽取与长文档分块迭代回路，共十八个可交互节点"
             >
               <defs>
                 <marker
@@ -132,6 +134,28 @@
                   <path d="M0 0 L8 4 L0 8" fill="currentColor" />
                 </marker>
               </defs>
+              <rect
+                class="loop-box"
+                x="322"
+                y="290"
+                width="362"
+                height="215"
+                rx="14"
+              />
+              <rect
+                class="loop-box funnel-box"
+                x="508"
+                y="8"
+                width="572"
+                height="84"
+                rx="14"
+              />
+              <text x="515" y="104" class="flow-caption">
+                表格多时的定位漏斗：粗筛 → 精选 → 精抽（代码编排）
+              </text>
+              <text x="503" y="497" text-anchor="middle" class="flow-caption">
+                迭代回路：长文档循环，短文档只走一次（代码控制）
+              </text>
               <g
                 class="connections"
                 fill="none"
@@ -139,21 +163,57 @@
                 stroke-width="1.5"
                 marker-end="url(#arrow)"
               >
-                <path d="M208 95 H277" />
-                <path d="M453 95 H522" />
-                <path d="M610 130 V192" />
-                <path d="M522 227 H453" />
-                <path d="M277 227 H208" />
+                <path d="M140 190 H170" />
+                <path d="M310 190 H340" />
+                <path d="M480 190 H505 V150 H530" />
+                <path d="M480 190 H505 V230 H530" />
+                <path d="M595 120 V82" />
+                <path d="M650 52 H670" />
+                <path d="M800 52 H820" />
+                <path d="M940 52 H960" />
+                <path d="M1015 82 V190 H900" />
+                <path d="M660 230 H690 V190 H720" />
+                <path d="M810 220 V305" />
+                <path d="M720 335 H670" />
+                <path d="M810 365 V420" />
+                <path d="M720 450 H670" />
+                <path d="M595 420 V365" />
+                <path d="M520 335 H485" />
+                <path d="M410 365 V420" />
+                <path d="M485 450 H520" />
+                <path d="M335 335 H300" />
+                <path d="M150 335 H120" />
               </g>
               <g class="flow-pulses" fill="none" stroke-width="3">
-                <path d="M208 95 H267" />
-                <path d="M453 95 H512" />
-                <path d="M610 130 V182" />
-                <path d="M512 227 H463" />
-                <path d="M267 227 H218" />
+                <path d="M140 190 H170" />
+                <path d="M310 190 H340" />
+                <path d="M480 190 H505 V150 H530" />
+                <path d="M480 190 H505 V230 H530" />
+                <path d="M650 52 H670" />
+                <path d="M800 52 H820" />
+                <path d="M940 52 H960" />
+                <path d="M1015 82 V190 H900" />
+                <path d="M660 230 H690 V190 H720" />
+                <path d="M810 220 V305" />
+                <path d="M720 335 H670" />
+                <path d="M810 365 V420" />
+                <path d="M720 450 H670" />
+                <path d="M595 420 V365" />
+                <path d="M520 335 H485" />
+                <path d="M410 365 V420" />
+                <path d="M485 450 H520" />
+                <path d="M335 335 H300" />
+                <path d="M150 335 H120" />
               </g>
-              <text x="365" y="24" text-anchor="middle" class="flow-caption">
-                字段配置 + 文档文本 → 提示词
+              <text x="810" y="152" text-anchor="middle" class="flow-caption">
+                字段配置
+              </text>
+              <text x="695" y="326" text-anchor="middle" class="flow-caption">
+                短文档
+              </text>
+              <text x="822" y="398" class="flow-caption">长文档</text>
+              <text x="317" y="326" text-anchor="middle" class="flow-caption">
+                完成
               </text>
               <g
                 class="flow-node"
@@ -162,11 +222,11 @@
                 tabindex="0"
                 aria-label="PDF 文件"
                 aria-pressed="false"
-                transform="translate(32 60)"
+                transform="translate(20 160)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">01 / INPUT</text>
-                <text x="16" y="49">PDF 文件</text>
+                <rect width="120" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">01 / INPUT</text>
+                <text x="14" y="45">PDF 文件</text>
               </g>
               <g
                 class="flow-node"
@@ -175,11 +235,102 @@
                 tabindex="0"
                 aria-label="前置程序转文本"
                 aria-pressed="false"
-                transform="translate(277 60)"
+                transform="translate(170 160)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">02 / ENGINEERING</text>
-                <text x="16" y="49">前置程序转文本</text>
+                <rect width="140" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">02 / ENGINEERING</text>
+                <text x="14" y="45">前置程序转文本</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="router"
+                role="button"
+                tabindex="0"
+                aria-label="按内容类型分流"
+                aria-pressed="false"
+                transform="translate(340 160)"
+              >
+                <rect width="140" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">03 / ROUTING</text>
+                <text x="14" y="45">按内容类型分流</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="table"
+                role="button"
+                tabindex="0"
+                aria-label="表格数据抽取模式"
+                aria-pressed="false"
+                transform="translate(530 120)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">04B / TABLE MODE</text>
+                <text x="14" y="45">表格数据抽取</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="plain"
+                role="button"
+                tabindex="0"
+                aria-label="纯文本抽取模式"
+                aria-pressed="false"
+                transform="translate(530 200)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">04A / TEXT MODE</text>
+                <text x="14" y="45">纯文本抽取</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="catalog"
+                role="button"
+                tabindex="0"
+                aria-label="表格目录（100 个）"
+                aria-pressed="false"
+                transform="translate(520 22)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">T1 / CODE</text>
+                <text x="14" y="45">建目录项</text>
+              </g>
+              <g
+                class="flow-node llm"
+                data-node="coarse"
+                role="button"
+                tabindex="0"
+                aria-label="粗筛，分页询问"
+                aria-pressed="false"
+                transform="translate(670 22)"
+              >
+                <rect width="130" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">T2 / LLM 调用</text>
+                <text x="14" y="45">粗筛·分页问</text>
+              </g>
+              <g
+                class="flow-node llm"
+                data-node="pick"
+                role="button"
+                tabindex="0"
+                aria-label="精选，再问一遍"
+                aria-pressed="false"
+                transform="translate(820 22)"
+              >
+                <rect width="120" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">T3 / LLM 调用</text>
+                <text x="14" y="45">精选·再问</text>
+              </g>
+              <g
+                class="flow-node llm"
+                data-node="tablex"
+                role="button"
+                tabindex="0"
+                aria-label="精抽，单个表格"
+                aria-pressed="false"
+                transform="translate(960 22)"
+              >
+                <rect width="110" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">T4 / LLM 调用</text>
+                <text x="14" y="45">精抽·单表</text>
               </g>
               <g
                 class="flow-node"
@@ -188,24 +339,50 @@
                 tabindex="0"
                 aria-label="提示词拼装器"
                 aria-pressed="true"
-                transform="translate(522 60)"
+                transform="translate(720 160)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">03 / ENGINEERING</text>
-                <text x="16" y="49">提示词拼装器</text>
+                <rect width="180" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">05 / ENGINEERING</text>
+                <text x="14" y="45">提示词拼装器</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="budget"
+                role="button"
+                tabindex="0"
+                aria-label="预算判断"
+                aria-pressed="false"
+                transform="translate(720 305)"
+              >
+                <rect width="180" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">06 / CODE</text>
+                <text x="14" y="45">预算判断：≤100K？</text>
               </g>
               <g
                 class="flow-node llm"
                 data-node="llm"
                 role="button"
                 tabindex="0"
-                aria-label="LLM 抽取，唯一大模型环节"
+                aria-label="LLM 抽取，大模型环节"
                 aria-pressed="false"
-                transform="translate(522 192)"
+                transform="translate(520 305)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">04 / ONLY LLM</text>
-                <text x="16" y="49">LLM → JSON 中间数据</text>
+                <rect width="150" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">07 / LLM</text>
+                <text x="14" y="45">LLM 抽取</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="merge"
+                role="button"
+                tabindex="0"
+                aria-label="代码合并"
+                aria-pressed="false"
+                transform="translate(335 305)"
+              >
+                <rect width="150" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">08 / CODE</text>
+                <text x="14" y="45">代码合并</text>
               </g>
               <g
                 class="flow-node"
@@ -214,11 +391,11 @@
                 tabindex="0"
                 aria-label="按字段规则转换"
                 aria-pressed="false"
-                transform="translate(277 192)"
+                transform="translate(150 305)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">05 / ENGINEERING</text>
-                <text x="16" y="49">按字段规则转换</text>
+                <rect width="150" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">09 / ENGINEERING</text>
+                <text x="14" y="45">按字段规则转换</text>
               </g>
               <g
                 class="flow-node"
@@ -227,14 +404,53 @@
                 tabindex="0"
                 aria-label="入库"
                 aria-pressed="false"
-                transform="translate(32 192)"
+                transform="translate(20 305)"
               >
-                <rect width="176" height="70" rx="10" />
-                <text x="16" y="23" class="node-number">06 / STORAGE</text>
-                <text x="16" y="49">入库</text>
+                <rect width="100" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">10 / STORAGE</text>
+                <text x="14" y="45">入库</text>
               </g>
-              <text x="365" y="308" text-anchor="middle" class="flow-caption">
-                其余环节均为普通工程能力，而非大模型能力
+              <g
+                class="flow-node"
+                data-node="splitter"
+                role="button"
+                tabindex="0"
+                aria-label="长文档按段落分块"
+                aria-pressed="false"
+                transform="translate(720 420)"
+              >
+                <rect width="180" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">LOOP-A / CODE</text>
+                <text x="14" y="45">按段落分块</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="chunkprompt"
+                role="button"
+                tabindex="0"
+                aria-label="拼本块提示词"
+                aria-pressed="false"
+                transform="translate(520 420)"
+              >
+                <rect width="150" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">LOOP-B / CODE</text>
+                <text x="14" y="45">拼本块提示词</text>
+              </g>
+              <g
+                class="flow-node"
+                data-node="update"
+                role="button"
+                tabindex="0"
+                aria-label="更新待抽字段"
+                aria-pressed="false"
+                transform="translate(335 420)"
+              >
+                <rect width="150" height="60" rx="10" />
+                <text x="14" y="22" class="node-number">LOOP-C / CODE</text>
+                <text x="14" y="45">更新待抽字段</text>
+              </g>
+              <text x="540" y="537" text-anchor="middle" class="flow-caption">
+                流程由代码编排；大模型只负责判断（定位）与抽取
               </text>
             </svg>
           </div>
@@ -245,7 +461,7 @@
           ></aside>
         </div>
         <p class="section-note">
-          说明：实际流程比此更复杂，后续补充。这里聚焦职责边界，不展开解析、校验、异常处理等细节。窄屏可左右滑动流程图。
+          说明：实际流程比此更复杂，后续补充。这里聚焦职责边界，不展开解析、校验、异常处理等细节。窄屏可左右滑动流程图。预算与分块策略均为示意，可配置。
         </p>
       </section>
 
@@ -257,6 +473,17 @@
           </div>
           <button id="reset" type="button" class="secondary">重置演示</button>
         </div>
+        <fieldset class="mode-switch">
+          <legend>抽取模式</legend>
+          <label
+            ><input type="radio" name="mode" value="text" checked />
+            纯文本抽取</label
+          >
+          <label
+            ><input type="radio" name="mode" value="table" />
+            表格数据抽取</label
+          >
+        </fieldset>
         <p class="section-intro">
           业务同事只需选字段、写含义与取值方向，<strong>不填写样例</strong>。下方提示词实时拼装；JSON
           仅用预置样本演示数据形态。
@@ -275,10 +502,13 @@
           </article>
           <article class="document panel">
             <div class="panel-heading">
-              <h3><span>02</span> PDF 转出的文本</h3>
-              <span class="tag">模拟文档</span>
+              <h3>
+                <span>02</span>
+                <span id="doc-title" class="plain">PDF 转出的文本</span>
+              </h3>
+              <span id="doc-tag" class="tag">模拟文档</span>
             </div>
-            <p class="hint">前置程序产物，不是大模型生成。</p>
+            <p id="doc-hint" class="hint">前置程序产物，不是大模型生成。</p>
             <label class="sr-only" for="document-text">模拟 PDF 文本</label
             ><textarea id="document-text" spellcheck="false"></textarea>
             <p class="hint">
@@ -303,7 +533,7 @@
         <div class="results">
           <article class="panel">
             <div class="panel-heading">
-              <h3>LLM JSON 中间数据</h3>
+              <h3 id="raw-title">LLM JSON 中间数据</h3>
               <span class="tag">模拟 · 非模型输出</span>
             </div>
             <pre
@@ -328,14 +558,220 @@
         <p class="section-note">
           演示规则：发生日期统一为
           YYYY-MM-DD；金额由「万元」换算为「元」的数值；主体名称保留原文；缺失值保留
-          null。枚举映射可在规则层扩展。
+          null。表格模式逐行转换，空单元格保持 null。枚举映射可在规则层扩展。
+        </p>
+      </section>
+
+      <section id="funnel" aria-labelledby="funnel-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">04 / TABLE FUNNEL</p>
+            <h2 id="funnel-title">表格定位漏斗：粗筛 → 精选 → 精抽</h2>
+          </div>
+          <span class="tag">全部为模拟数据</span>
+        </div>
+        <p class="section-intro">
+          一个 PDF
+          可能有成百个表格，不可能全塞进提示词。表格结构：<strong>第一行标题，下一行单位，再往下是带行头列头的内容</strong>。流程同样由代码编排：先轻量定位，再重量抽取。
+        </p>
+        <div class="chain-controls">
+          <label class="toggle"
+            ><input type="checkbox" id="multi-hit" />
+            多命中（再进入精选）</label
+          >
+          <div class="chain-buttons">
+            <button type="button" id="funnel-step" class="secondary">
+              单步 ▸
+            </button>
+            <button type="button" id="funnel-play" class="secondary">
+              ▶ 自动播放
+            </button>
+            <button type="button" id="funnel-reset" class="secondary">
+              重置
+            </button>
+          </div>
+        </div>
+        <div class="budget panel">
+          <h3 class="plain-h">各步骤输入大小对比（示意，单位 K token）</h3>
+          <div id="funnel-sizes"></div>
+          <p class="hint scale">
+            全部表格的体积远超单次输入预算（约
+            100K），放不下，效果也差；漏斗每一步只放必要内容。
+          </p>
+          <ol
+            id="funnel-steps"
+            class="chunk-list"
+            aria-label="漏斗步骤进度"
+          ></ol>
+        </div>
+        <p id="funnel-status" class="demo-status" role="status"></p>
+        <div class="chain-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3 id="funnel-title-now">当前步骤提示词</h3>
+              <span class="tag blue">由代码拼出</span>
+            </div>
+            <p class="hint" id="funnel-step-title"></p>
+            <pre
+              id="funnel-prompt"
+              tabindex="0"
+              aria-label="当前步骤完整提示词"
+            ></pre>
+          </article>
+          <div class="chain-side">
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>模型返回</h3>
+                <span class="tag">模拟 · 非模型输出</span>
+              </div>
+              <pre
+                id="funnel-returned"
+                tabindex="0"
+                aria-label="模型本步返回"
+              ></pre>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>命中与最终结果</h3>
+                <span class="tag">模拟</span>
+              </div>
+              <pre
+                id="funnel-hit"
+                tabindex="0"
+                aria-label="命中与最终结果"
+              ></pre>
+            </article>
+          </div>
+        </div>
+        <p class="section-note">
+          精选的做法就是“再问一遍”。表格目录与结果均为脱敏模拟，数值、表格数量与大小仅作示意。
+        </p>
+      </section>
+
+      <section id="chunking" aria-labelledby="chunking-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">05 / LONG DOCUMENT · PROMPT CHAINING</p>
+            <h2 id="chunking-title">长文档：分块迭代抽取</h2>
+          </div>
+          <span class="tag">全部为模拟数据</span>
+        </div>
+        <p class="section-intro">
+          模型虽支持 256K 上下文，但用多了效果会变差，所以只把约
+          <strong>100K</strong>
+          当作单次输入预算。<strong>流程由代码控制</strong>：代码根据模型上一次的返回，拼出下一次提示词再调用模型。
+        </p>
+        <div class="chain-controls">
+          <fieldset class="mode-switch">
+            <legend>文档长度</legend>
+            <label
+              ><input type="radio" name="doc-length" value="long" checked />
+              长文档（分块）</label
+            >
+            <label
+              ><input type="radio" name="doc-length" value="short" />
+              短文档（一次抽取）</label
+            >
+          </fieldset>
+          <div class="chain-buttons">
+            <button type="button" id="chain-step" class="secondary">
+              单步 ▸
+            </button>
+            <button type="button" id="chain-play" class="secondary">
+              ▶ 自动播放
+            </button>
+            <button type="button" id="chain-reset" class="secondary">
+              重置
+            </button>
+          </div>
+        </div>
+        <div class="budget panel">
+          <div class="budget-row">
+            <span id="chain-doc-label"></span>
+            <div
+              class="meter"
+              role="progressbar"
+              aria-label="全文大小，单位 K token，刻度到 320K"
+              aria-valuemin="0"
+              aria-valuemax="320"
+              aria-valuenow="0"
+            >
+              <i id="bar-doc"></i
+              ><b class="mark" style="left: 31.25%" title="100K 预算"></b
+              ><b class="mark cap" style="left: 80%" title="256K 上限"></b>
+            </div>
+          </div>
+          <div class="budget-row">
+            <span id="chain-turn-label"></span>
+            <div
+              class="meter"
+              role="progressbar"
+              aria-label="本轮输入大小，单位 K token，刻度到 320K"
+              aria-valuemin="0"
+              aria-valuemax="320"
+              aria-valuenow="0"
+            >
+              <i id="bar-turn"></i><b class="mark" style="left: 31.25%"></b
+              ><b class="mark cap" style="left: 80%"></b>
+            </div>
+          </div>
+          <p class="hint scale">
+            刻度：竖线 100K = 实际使用的预算；虚线 256K = 模型上限。数值为示意。
+          </p>
+          <ol
+            id="chain-chunks"
+            class="chunk-list"
+            aria-label="文档块处理进度"
+          ></ol>
+        </div>
+        <p id="chain-status" class="demo-status" role="status"></p>
+        <div class="chain-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>本轮完整提示词</h3>
+              <span class="tag blue">由代码拼出</span>
+            </div>
+            <pre
+              id="chain-prompt"
+              tabindex="0"
+              aria-label="本轮完整提示词"
+            ></pre>
+          </article>
+          <div class="chain-side">
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>模型返回</h3>
+                <span class="tag">模拟 · 非模型输出</span>
+              </div>
+              <pre
+                id="chain-returned"
+                tabindex="0"
+                aria-label="模型本轮返回"
+              ></pre>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>合并后的当前记录</h3>
+                <span class="tag">代码合并</span>
+              </div>
+              <pre
+                id="chain-record"
+                tabindex="0"
+                aria-label="合并后的当前记录"
+              ></pre>
+              <p class="hint">待抽字段：<strong id="chain-pending"></strong></p>
+            </article>
+          </div>
+        </div>
+        <p class="section-note">
+          可配置策略（默认）：同一字段先出现的优先；抽齐后提前结束；按段落边界切块，块间少量重叠。块内省略号、大小均为示意。
         </p>
       </section>
 
       <section id="template" aria-labelledby="template-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">04 / TEMPLATE & BOUNDARIES</p>
+            <p class="eyebrow">06 / TEMPLATE & BOUNDARIES</p>
             <h2 id="template-title">固定约束，动态注入业务知识</h2>
           </div>
           <p>模板独立维护，字段定义按配置生成</p>
@@ -343,13 +779,67 @@
         <div class="template-layout">
           <article class="panel">
             <div class="panel-heading">
-              <h3>完整提示词模板</h3>
+              <h3>纯文本模式模板</h3>
               <span class="tag">{{占位符}}</span>
             </div>
             <pre
               id="prompt-template"
               tabindex="0"
-              aria-label="完整提示词模板"
+              aria-label="纯文本模式提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>表格模式模板</h3>
+              <span class="tag">与纯文本的差异：System 与输出结构</span>
+            </div>
+            <pre
+              id="table-template"
+              tabindex="0"
+              aria-label="表格模式提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>表格漏斗 · 粗筛模板</h3>
+              <span class="tag">目录项 + 字段，“没有就说没有”</span>
+            </div>
+            <pre
+              id="coarse-template"
+              tabindex="0"
+              aria-label="粗筛提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>表格漏斗 · 精选模板</h3>
+              <span class="tag">候选表格，再问一遍</span>
+            </div>
+            <pre
+              id="pick-template"
+              tabindex="0"
+              aria-label="精选提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>表格漏斗 · 精抽模板</h3>
+              <span class="tag">完整表格，结果带单位</span>
+            </div>
+            <pre
+              id="extract-template"
+              tabindex="0"
+              aria-label="精抽提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>分块 · 首块模板</h3>
+              <span class="tag">告知“只是一部分”</span>
+            </div>
+            <pre
+              id="first-chunk-template"
+              tabindex="0"
+              aria-label="首块提示词模板"
+            ></pre>
+            <div class="panel-heading spaced">
+              <h3>分块 · 后续块模板</h3>
+              <span class="tag">已得字段 + 仅待抽字段</span>
+            </div>
+            <pre
+              id="next-chunk-template"
+              tabindex="0"
+              aria-label="后续块提示词模板"
             ></pre>
           </article>
           <div class="principles">
@@ -391,6 +881,85 @@
                 </p>
               </div>
             </article>
+            <article>
+              <span>05</span>
+              <div>
+                <h3>两种模式：差异只在 System 与输出</h3>
+                <p>
+                  表格模式保留表格格式，要求按表头取列、合并或空单元格填
+                  null、不跨行串值，输出为多行记录数组；纯文本输出一条记录。字段配置方式不变。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>06</span>
+              <div>
+                <h3>为什么只用 100K</h3>
+                <p>
+                  256K
+                  是上限而非推荐用量：用得多效果会明显变差，且更贵。预算内一次抽取，超出才切块。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>07</span>
+              <div>
+                <h3>为什么告知“只是一部分”</h3>
+                <p>
+                  否则模型会认为文档就是全部，对没出现的字段猜测或乱填。明确“找不到填
+                  null”，让它宁缺勿猜；缺的字段留给后面的块。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>08</span>
+              <div>
+                <h3>为什么只列待抽字段</h3>
+                <p>
+                  已抽到的字段不再进入后续提示词：省
+                  token，也避免被后面块里的相似内容覆盖。已得字段只作为上下文告知。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>09</span>
+              <div>
+                <h3>目录项为什么带单位</h3>
+                <p>
+                  同名表格单位可能不同（元 /
+                  万元）。目录里带单位，粗筛与精选才能判断“是不是要的那张”，精抽时也能带上单位。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>10</span>
+              <div>
+                <h3>为什么放前 3 行、前 2 列样例</h3>
+                <p>
+                  仅看标题容易误判；放少量样例能看出表的真实内容，又把每个目录项控制在很短。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>11</span>
+              <div>
+                <h3>先轻量定位，再重量抽取</h3>
+                <p>
+                  定位只需目录项，抽取才需要完整表格。只把最终那一个表格交给精抽，省
+                  token，也减少被无关表格干扰。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>12</span>
+              <div>
+                <h3>粗筛为什么分页、可并行</h3>
+                <p>
+                  约 100 个表格每 20 个一页，问 5
+                  次。页之间没有依赖，可并行以缩短耗时，这是优化提示。
+                </p>
+              </div>
+            </article>
             <p class="section-note">
               文档与字段说明均为数据，不得覆盖 System
               规则。真实系统还需结构校验与异常处理，提示词分隔本身不能保证防住提示注入。
@@ -399,10 +968,98 @@
         </div>
       </section>
 
+      <section id="workflow" aria-labelledby="workflow-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">07 / WORKFLOW vs AGENT</p>
+            <h2 id="workflow-title">workflow 与 agent 的取舍</h2>
+          </div>
+          <p>本系统是代码编排的 LLM workflow，不是自治 agent</p>
+        </div>
+        <div class="comparison">
+          <article class="panel after">
+            <span class="small-label">WORKFLOW / 本系统</span>
+            <h3>代码决定下一步，模型只做抽取</h3>
+            <dl class="wide">
+              <dt>谁控制</dt>
+              <dd>
+                代码：分流、预算判断、分块、合并、何时结束都写死在流程里。
+              </dd>
+              <dt>可控性</dt>
+              <dd>步骤与分支固定，行为边界清晰。</dd>
+              <dt>可复现</dt>
+              <dd>相同输入走相同路径，易回放、易对比。</dd>
+              <dt>可排查</dt>
+              <dd>
+                每一轮的提示词、返回、合并结果都可记录，问题能定位到某一步。
+              </dd>
+              <dt>成本</dt>
+              <dd>调用次数可预估：短文档 1 次，长文档至多 N 块。</dd>
+            </dl>
+          </article>
+          <article class="panel">
+            <span class="small-label">AGENT / 对照</span>
+            <h3>模型自主决定下一步</h3>
+            <dl class="wide">
+              <dt>谁控制</dt>
+              <dd>模型：自行规划、选工具、决定何时停止。</dd>
+              <dt>可控性</dt>
+              <dd>灵活，但路径不固定，边界更难约束。</dd>
+              <dt>可复现</dt>
+              <dd>同样输入可能走不同路径，难复现。</dd>
+              <dt>可排查</dt>
+              <dd>需要从长轨迹里找原因。</dd>
+              <dt>成本</dt>
+              <dd>调用次数与长度不确定，需额外设上限。</dd>
+            </dl>
+          </article>
+        </div>
+        <p class="section-note">
+          选择依据：抽取任务步骤已知、可枚举，所以用 workflow（prompt
+          chaining）；任务开放、步骤无法预先确定时，才考虑
+          agent。这是取舍，不是优劣。
+        </p>
+      </section>
+
+      <section id="optimize" aria-labelledby="optimize-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">08 / FUTURE OPTIMIZATIONS</p>
+            <h2 id="optimize-title">后续可优化方向</h2>
+          </div>
+          <span class="tag warn">当时没有做 / 可优化，非已实现</span>
+        </div>
+        <ol class="optimize-list">
+          <li>
+            <h3>向量检索或关键词规则预筛</h3>
+            <p>
+              先把上百个表格缩到
+              Top-N，再交给模型。当时考虑过，但第一版实现比较粗糙没有做，粗筛已够用。
+            </p>
+          </li>
+          <li>
+            <h3>粗筛返回置信度和理由</h3>
+            <p>供精选参考，而不是只返回命中与否。</p>
+          </li>
+          <li>
+            <h3>跨页大表在目录阶段先合并</h3>
+            <p>避免同一张表被拆成多个目录项。</p>
+          </li>
+          <li>
+            <h3>全部未命中时返回 null 并标注未命中</h3>
+            <p>让下游能区分“没找到表”与“表里没有值”。</p>
+          </li>
+          <li>
+            <h3>精抽结果回查校验</h3>
+            <p>把抽到的值回查原表，确认单元格确实存在。</p>
+          </li>
+        </ol>
+      </section>
+
       <section id="iteration" aria-labelledby="iteration-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">05 / RESULTS & ITERATION</p>
+            <p class="eyebrow">09 / RESULTS & ITERATION</p>
             <h2 id="iteration-title">效果与迭代</h2>
           </div>
           <span class="tag">待补充</span>
