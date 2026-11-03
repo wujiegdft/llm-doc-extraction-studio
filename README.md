@@ -142,14 +142,14 @@ npm ci
 npm run dev
 ```
 
-部署环境需预先注入 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit 权限），不要将令牌写入仓库。账户 ID 已在 `wrangler.jsonc` 的 `account_id` 中配置。
+部署环境需预先注入 `CLOUDFLARE_API_TOKEN`，不要将令牌写入仓库。令牌需具有配置账户的 Workers Scripts Edit 权限，并能为 `wujie1123.shop` 区域（Zone）部署自定义域名；当前项目令牌已验证可完成部署。账户 ID 已在 `wrangler.jsonc` 的 `account_id` 中配置。
 
 ```sh
 npm run deploy
 ```
 
-已部署的占位首页：<https://llm-doc-extraction-studio.wujiegdft.workers.dev/>。
+已部署的占位首页：<https://extract.wujie1123.shop/>；同时保留 <https://llm-doc-extraction-studio.wujiegdft.workers.dev/>。
 
 Worker 名称为 `llm-doc-extraction-studio`，部署命令会输出 `*.workers.dev` 访问地址。若账户尚未启用 workers.dev 子域名，请先在 Cloudflare 控制台的 Workers & Pages 中启用，再重新部署；若提示认证或权限错误，请检查令牌是否覆盖配置的账户且具有 Workers Scripts Edit 权限。
 
-配置不包含 `routes` 或 `custom_domain`，不需要 DNS / Routes 权限。自定义域名 `extract.wujie1123.shop` 由用户稍后在 Cloudflare 控制台的该 Worker → Settings → Domains & Routes → Add → Custom Domain 手动绑定。
+`wrangler.jsonc` 通过 `routes: [{ "pattern": "extract.wujie1123.shop", "custom_domain": true }]` 声明自定义域名，`npm run deploy` 会将其绑定到 Worker，无需手动配置路由或 DNS。首次绑定后 HTTPS 生效可能需要几分钟，可稍后重试访问。
